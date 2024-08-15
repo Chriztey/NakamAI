@@ -2,6 +2,8 @@ package com.chris.geminibasedapp.utils
 
 import com.chris.geminibasedapp.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,5 +22,14 @@ object AppModule {
             apiKey = BuildConfig.API_KEY
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFirestore() : FirebaseFirestore = FirebaseFirestore.getInstance()
+
 
 }

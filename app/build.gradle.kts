@@ -6,6 +6,7 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -36,6 +37,14 @@ android {
             type = "String",
             name = "API_KEY",
             value = "\"${apiKey}\""
+        )
+
+        val webClient = properties.getProperty("WEB_CLIENT_ID") ?: ""
+
+        buildConfigField(
+            type = "String",
+            name = "WEB_CLIENT_ID",
+            value = "\"${webClient}\""
         )
 
 
@@ -112,6 +121,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.generativeai)
+    implementation(libs.firebase.auth)
+    implementation(libs.googleid)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -15,12 +15,14 @@ import com.chris.geminibasedapp.ui.screen.HomeScreen
 import com.chris.geminibasedapp.ui.screen.ImagePromptScreen
 import com.chris.geminibasedapp.ui.screen.TextPromptScreen
 import com.chris.geminibasedapp.ui.theme.GeminiBasedAppTheme
+import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         setContent {
             GeminiBasedAppTheme {
                 // A surface container using the 'background' color from the theme
