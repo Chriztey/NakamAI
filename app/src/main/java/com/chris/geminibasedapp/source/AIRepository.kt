@@ -8,7 +8,7 @@ interface AIRepository {
         prompt: String,
         callback: (UiState) -> Unit,
         result: (String) -> Unit,
-        inquiry: (String) -> Unit
+        //inquiry: (String) -> Unit
     )
     suspend fun sentTextImagePrompt(
         bitmap: Bitmap,

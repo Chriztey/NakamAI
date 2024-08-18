@@ -8,6 +8,7 @@ object Constants {
     const val SAVED_TEXTGENERATION = "savedTextGeneration"
     const val SAVED_MULTIMODAL = "savedMultiModal"
     const val USER_PATH_FIRESTORE = "users"
+    const val IMAGE = "image"
 
 
 }

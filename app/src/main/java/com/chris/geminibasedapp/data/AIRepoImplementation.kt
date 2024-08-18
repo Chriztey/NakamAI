@@ -17,7 +17,7 @@ class AIRepoImplementation @Inject constructor(
         prompt: String,
         callback: (UiState) -> Unit,
         result: (String) -> Unit,
-        inquiry: (String) -> Unit
+
         ) {
         try {
             val response = generativeModel.generateContent(
@@ -25,7 +25,7 @@ class AIRepoImplementation @Inject constructor(
                     text(prompt)
                 }
             )
-            inquiry(prompt)
+
             response.text?.let { outputContent ->
                 callback(UiState.Success(outputContent))
                 result(outputContent)

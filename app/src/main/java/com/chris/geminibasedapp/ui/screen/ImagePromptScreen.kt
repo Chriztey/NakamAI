@@ -31,7 +31,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,8 +61,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.R
+import com.chris.geminibasedapp.common.ImageChatLine
 import com.chris.geminibasedapp.common.UiState
-import com.chris.geminibasedapp.ui.component.AppTopBar
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 import java.io.InputStream
 
@@ -90,8 +89,12 @@ fun ImagePromptScreen(
     val aiViewModel = hiltViewModel<AIViewModel>()
 
     val uiState by aiViewModel.uiState.collectAsState()
-    val promptState by aiViewModel.promptState.collectAsState()
+    val promptState by aiViewModel.chatRoomStateMultiModal.collectAsState()
     val imagePromptState by aiViewModel.imagePromptState.collectAsState()
+
+    var currentImage by remember {
+        mutableStateOf<Bitmap?>(null)
+    }
 
     var textPrompt by rememberSaveable {
         mutableStateOf("")
@@ -107,6 +110,16 @@ fun ImagePromptScreen(
         hasCameraPermission = isGranted
     }
 
+    fun updateChatImage(): Bitmap? {
+        return if (currentImage != imagePromptState) {
+            imagePromptState
+        } else null
+    }
+
+    fun selectedImage(){
+        currentImage = imagePromptState
+    }
+
     LaunchedEffect(Unit) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             hasCameraPermission = true
@@ -120,6 +133,7 @@ fun ImagePromptScreen(
     ) { bitmap ->
         bitmap?.let {
             aiViewModel.updateBitmap(bitmap)
+
         }
     }
 
@@ -133,6 +147,7 @@ fun ImagePromptScreen(
 
                 if (bitmap != null) {
                     aiViewModel.updateBitmap(bitmap)
+
                 }
             }
         }
@@ -166,12 +181,22 @@ fun ImagePromptScreen(
 
 
                             if (imagePromptState != null) {
-                                aiViewModel.updateChat(
+                                aiViewModel.updateChatMultiModal(
                                     isUser = true,
-                                    chat = textPrompt
+                                    chat = textPrompt,
+                                    image = null
                                 )
 
-                                aiViewModel.sendTextImagePrompt(imagePromptState!!,textPrompt)
+
+
+                                aiViewModel.sendTextImagePrompt(
+                                    bitmap = imagePromptState!!,
+                                    prompt = textPrompt,
+                                    selectedImage = updateChatImage())
+
+                                selectedImage()
+
+                                //currentImage = null
                             } else {
                                 Toast.makeText(context, "You haven't add Any Image yet", Toast.LENGTH_SHORT).show()
                             }
@@ -207,10 +232,17 @@ fun ImagePromptScreen(
                         .verticalScroll(rememberScrollState()),
                 ) {
                     if (imagePromptState != null) {
+
+                        Text(
+                            text = "Current Image:",
+                            style = MaterialTheme.typography.titleLarge
+                            )
+
                         Image(
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(vertical = 8.dp)
-                                .size(500.dp)
+                                .size(250.dp)
                                 .clip(RoundedCornerShape(32.dp))
                                 ,
                             contentScale = ContentScale.Fit,
@@ -231,13 +263,19 @@ fun ImagePromptScreen(
                         ) {
                             Button(onClick = {
 
-                                aiViewModel.updateChat(
+                                aiViewModel.updateChatMultiModal(
                                     isUser = true,
                                     chat = "What is This?"
                                 )
 
                                 if (imagePromptState != null) {
-                                    aiViewModel.sendTextImagePrompt(imagePromptState!!,"What is This?")
+                                    aiViewModel.sendTextImagePrompt(
+                                        imagePromptState!!,
+                                        "What is This?",
+                                        selectedImage = updateChatImage()
+                                        )
+
+                                    selectedImage()
                                 } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
                             }) {
                                 Text(text = "What is This?")
@@ -245,13 +283,19 @@ fun ImagePromptScreen(
 
                             Button(onClick = {
 
-                                aiViewModel.updateChat(
+                                aiViewModel.updateChatMultiModal(
                                     isUser = true,
                                     chat = "How do i Create This?"
                                 )
 
                                 if (imagePromptState != null) {
-                                    aiViewModel.sendTextImagePrompt(imagePromptState!!,"How do i Create This?")
+                                    aiViewModel.sendTextImagePrompt(
+                                        imagePromptState!!,
+                                        "How do i Create This?",
+                                        selectedImage = updateChatImage()
+                                        )
+
+                                    selectedImage()
                                 } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
 
 
@@ -270,7 +314,7 @@ fun ImagePromptScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally)
-                                .size(500.dp)
+                                .size(250.dp)
                                 .clip(CircleShape)
                                 ,
                             contentScale = ContentScale.Fit,
@@ -289,6 +333,16 @@ fun ImagePromptScreen(
 
                     if(promptState.chat.isNotEmpty()) {
                         for (chat in promptState.chat) {
+                            if (chat.image != null) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(250.dp)
+                                        .padding(16.dp)
+                                        .align(Alignment.Start),
+                                    contentScale = ContentScale.Fit,
+                                    bitmap = chat.image.asImageBitmap(),
+                                    contentDescription = "")
+                            }
                             Text(
                                 modifier = Modifier.padding(4.dp),
                                 text = chat.chat,
@@ -317,6 +371,14 @@ fun ImagePromptScreen(
                                 Icon(painter = painterResource(
                                     id = R.drawable.baseline_delete_24),
                                     contentDescription = "clear chat")
+                            }
+
+                            IconButton(onClick = {
+                                /*TODO*/
+                            }) {
+                                Icon(painter = painterResource(
+                                    id = R.drawable.baseline_save_24),
+                                    contentDescription = "save chat")
                             }
                         }
 
@@ -352,8 +414,8 @@ fun ImagePromptScreen(
                 if (clearChatConfirmation) {
                     ClearChatDialogConfirmation(
                         clearChat = {
-                            aiViewModel.clearChat()
-                            clearChatConfirmation = false },
+                            aiViewModel.clearChatMultiModal()
+                            Toast.makeText(context, "Chat Cleared", Toast.LENGTH_SHORT).show()},
                         cancelAction = {clearChatConfirmation = false}
                         )
                 }
@@ -396,9 +458,12 @@ fun ClearChatDialogConfirmation(
             Text(text = "Are you sure you want to clear all the chat?")
         },
         onDismissRequest = { cancelAction() },
-        confirmButton = { 
-            
-            Button(onClick = { clearChat() }) {
+        confirmButton = {
+            Button(onClick = {
+                clearChat()
+                cancelAction()
+
+            }) {
                 Text(text = "Clear Chat")
             }
             

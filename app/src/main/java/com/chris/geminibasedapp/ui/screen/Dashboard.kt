@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.R
+import com.chris.geminibasedapp.common.ChatLine
 import com.chris.geminibasedapp.ui.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
@@ -42,10 +43,18 @@ fun DashboardScreen() {
     val user = authViewModel.currentUser
     val savedTextGenerationSavedList by
         authViewModel.savedTextGenerationChatList.collectAsState()
+    val savedTextGenerationChatContent by
+    authViewModel.savedTextGenerationChatContent.collectAsState()
 
     val context = LocalContext.current
     val credentialManager = CredentialManager.create(context)
     val scope = rememberCoroutineScope()
+
+    val chatLine =
+        listOf(
+            ChatLine("Hello", true),
+            ChatLine("Yes?", false)
+        )
 
     Scaffold { paddingValues ->
 
@@ -103,16 +112,17 @@ fun DashboardScreen() {
                     Text(text = "Signout")
                 }
                 Button(onClick = { authViewModel.createData(
-                    user!!
+                    user!!,"Dashboard",chatLine
                 ) }) {
                     Text(text = "write")
                 }
 
 
                 Button(onClick = { authViewModel.readUserData(
-                    user!!.email!!
+                    user!!,
+                    id = "title"
                 ) }) {
-                    Text(text = "firestore")
+                    Text(text = "firestore chat")
                 }
                 Button(onClick = { authViewModel.readUserListData(
                     user!!
@@ -122,7 +132,13 @@ fun DashboardScreen() {
 
                 if (savedTextGenerationSavedList.isNotEmpty()) {
                     for (i in savedTextGenerationSavedList) {
-                        Text(text = i )
+                        Text(text = i.title )
+                    }
+                }
+
+                if(savedTextGenerationChatContent.isNotEmpty()) {
+                    for (chatContent in savedTextGenerationChatContent) {
+                        Text(text = "${chatContent.isUser} : ${chatContent.chat}")
                     }
                 }
 

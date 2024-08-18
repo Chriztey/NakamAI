@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.chris.geminibasedapp.common.AuthState
+import com.chris.geminibasedapp.common.ChatLine
+import com.chris.geminibasedapp.common.SavedChat
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.source.FirestoreDBRepository
 import com.chris.geminibasedapp.utils.Constants.CHAT
@@ -20,16 +22,20 @@ class FirestoreDBRepoImplementation @Inject constructor(
 ): FirestoreDBRepository {
 
 
-    override fun saveTextGenerationChat(
+    override fun saveChat(
+        title: String,
         textGenerationChat: HashMap<String,Any>,
         user: FirebaseUser,
-        callback: (UiState) -> Unit
+        callback: (UiState) -> Unit,
+        collection: String
     ) {
+
 
         firestore.collection(USER_PATH_FIRESTORE)
             .document(user.email!!)
-            .collection(SAVED_TEXTGENERATION)
-            .add(textGenerationChat)
+            .collection(collection)
+            .document(title)
+            .set(textGenerationChat)
             .addOnSuccessListener {
                 Log.d("Success", "DocumentSnapshot successfully written!")
                 callback(UiState.Success("Success"))
@@ -45,9 +51,9 @@ class FirestoreDBRepoImplementation @Inject constructor(
     override fun fetchSavedTextGenerationChat(
         user: FirebaseUser,
         callback: (UiState) -> Unit,
-        result: (List<String>) -> Unit
+        result: (List<SavedChat>) -> Unit
     ) {
-        var savedList : MutableList<String> = mutableListOf()
+        val savedList : MutableList<SavedChat> = mutableListOf()
 
         firestore.collection(USER_PATH_FIRESTORE)
             .document(user.email!!)
@@ -56,9 +62,15 @@ class FirestoreDBRepoImplementation @Inject constructor(
             .addOnSuccessListener { querySnapshot ->
                 for (document in querySnapshot) {
                     Log.d("Read Success", document.id)
+                    val chatId = document.id
                     val chatTitle = document.get(TITLE) as String
                     Log.d("Read Success", chatTitle)
-                    savedList.add(chatTitle)
+                    savedList.add(
+                        SavedChat(
+                            id = chatId,
+                            title = chatTitle
+                        )
+                    )
                 }
 
                 result(savedList)
@@ -81,8 +93,11 @@ class FirestoreDBRepoImplementation @Inject constructor(
     override fun fetchIndividualSavedTextGenerationChat(
         user: FirebaseUser,
         id: String,
-        callback: (UiState) -> Unit
+        callback: (UiState) -> Unit,
+        result: (List<ChatLine>) -> Unit
     ) {
+
+        val savedChatList : MutableList<ChatLine> = mutableListOf()
 
         firestore.collection(USER_PATH_FIRESTORE)
             .document(user.email!!)
@@ -95,11 +110,19 @@ class FirestoreDBRepoImplementation @Inject constructor(
                     val chatData = document.get(CHAT) as List<HashMap<*,*>>
 
                     for (chatLine in chatData) {
-                        val chat = chatLine[CHAT] as String
-                        val isUser = chatLine[IS_USER] as Boolean
+                        val temp = ChatLine(
+                            chat = chatLine[CHAT] as String,
+                            isUser = chatLine[IS_USER] as Boolean
+                        )
 
-                        Log.d("Read Success", "$isUser = $chat")
+//                        val chat = chatLine[CHAT] as String
+//                        val isUser = chatLine[IS_USER] as Boolean
+
+                        Log.d("Read Success", "${temp.isUser} = ${temp.chat}")
+                        savedChatList.add(temp)
                     }
+
+                    result(savedChatList)
 
                     callback(UiState.Success("Success"))
 
@@ -111,6 +134,7 @@ class FirestoreDBRepoImplementation @Inject constructor(
             .addOnFailureListener { e ->
                 e.message?.let { UiState.Error(it) }?.let { callback(it) }
                 Log.e("Firestore Error", "Error reading document", e)
+                callback(UiState.Error(e.message.toString()))
             }
 
     }

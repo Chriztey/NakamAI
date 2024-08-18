@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.chris.geminibasedapp.ui.screen.AIScreen
 import com.chris.geminibasedapp.ui.screen.BakingScreen
 import com.chris.geminibasedapp.ui.screen.HomeScreen
 import com.chris.geminibasedapp.ui.screen.ImagePromptScreen

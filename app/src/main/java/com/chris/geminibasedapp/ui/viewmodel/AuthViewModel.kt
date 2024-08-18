@@ -7,15 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chris.geminibasedapp.common.AuthState
 import com.chris.geminibasedapp.common.ChatLine
+import com.chris.geminibasedapp.common.SavedChat
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.source.AuthRepository
 import com.chris.geminibasedapp.source.FirestoreDBRepository
-import com.chris.geminibasedapp.utils.Constants.CHAT
-import com.chris.geminibasedapp.utils.Constants.SAVED_TEXTGENERATION
-import com.chris.geminibasedapp.utils.Constants.TITLE
-import com.chris.geminibasedapp.utils.Constants.USER_PATH_FIRESTORE
+import com.chris.geminibasedapp.utils.Constants
+import com.chris.geminibasedapp.utils.DataConversion
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,10 +36,16 @@ class AuthViewModel @Inject constructor(
         UiState.Initial
     )
 
-    private val _savedTextGenerationChatList: MutableStateFlow<List<String>> = MutableStateFlow(
+    private val _savedTextGenerationChatList: MutableStateFlow<List<SavedChat>> = MutableStateFlow(
         emptyList()
     )
-    val savedTextGenerationChatList: StateFlow<List<String>> = _savedTextGenerationChatList.asStateFlow()
+    val savedTextGenerationChatList: StateFlow<List<SavedChat>> = _savedTextGenerationChatList.asStateFlow()
+
+
+    private val _savedTextGenerationChatContent: MutableStateFlow<List<ChatLine>> = MutableStateFlow(
+        emptyList()
+    )
+    val savedTextGenerationChatContent: StateFlow<List<ChatLine>> = _savedTextGenerationChatContent.asStateFlow()
 
     val currentUser = authRepository.getCurrentUser()
 
@@ -85,69 +89,107 @@ class AuthViewModel @Inject constructor(
 
     // Database
 
+
+
     fun createData(
         user: FirebaseUser,
-        //callback: (AuthState) -> Unit
+        title: String,
+        chatList: List<ChatLine>
     ) {
 
-        val chatLine =
-            listOf(
-                ChatLine("Hello", true),
-                ChatLine("Yes?", false)
+
+        val data = DataConversion.textGenerationData(
+            title = title,
+            chatList = chatList
         )
 
-        val chatTitle = "Testing Database"
-
-        val pack = hashMapOf(
-            TITLE to chatTitle,
-            CHAT to chatLine)
+        _uiState.value = UiState.Loading
 
 
 
-        val firestore = FirebaseFirestore.getInstance()
+        firestoreDBRepository.saveChat(
+            title = title,
+            textGenerationChat = data,
+            user = user,
+            callback = {
+                _uiState.value = it
+            },
+            collection = Constants.SAVED_TEXTGENERATION
+        )
 
 
-        firestore.collection(USER_PATH_FIRESTORE)
-            .document(user.email!!)
-            .collection(SAVED_TEXTGENERATION)
-            .add(pack)
-            .addOnSuccessListener {
-                Log.d("Success", "DocumentSnapshot successfully written!")
-                //callback(AuthState.Authenticated)
-            }
 
-            .addOnFailureListener { e ->
-                Log.e("Firestore Error", "Error writing document", e)
-                // callback(
-                //  AuthState.Error(e.message ?: "Something Went Wrong"))
-            }
-        Log.d("User", "End")
+
+//        val chatLineMap = chatLine.map { chat ->
+//            mapOf(
+//                CHAT to chat.chat,      // Explicitly named as "chat"
+//                IS_USER to chat.isUser   // Explicitly named as "isUser"
+//            )
+//        }
+//
+//        val chatTitle = "Testing Database"
+//
+//        val pack = hashMapOf(
+//            TITLE to chatTitle,
+//            CHAT to chatLineMap)
+//
+//
+//
+//        val firestore = FirebaseFirestore.getInstance()
+//
+//
+//        firestore.collection(USER_PATH_FIRESTORE)
+//            .document(user.email!!)
+//            .collection(SAVED_TEXTGENERATION)
+//            .add(pack)
+//            .addOnSuccessListener {
+//                Log.d("Success", "DocumentSnapshot successfully written!")
+//                //callback(AuthState.Authenticated)
+//            }
+//
+//            .addOnFailureListener { e ->
+//                Log.e("Firestore Error", "Error writing document", e)
+//                // callback(
+//                //  AuthState.Error(e.message ?: "Something Went Wrong"))
+//            }
+//        Log.d("User", "End")
 
     }
 
 
-    fun readUserData(email: String,
-                     //callback: (AuthState, Map<String, Any>?) -> Unit
+    fun readUserData(
+        user: FirebaseUser,
+        id: String
     ) {
-        val firestore = FirebaseFirestore.getInstance()
 
-        firestore.collection(USER_PATH_FIRESTORE)
-            .document(email)
-            .collection(SAVED_TEXTGENERATION)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot) {
-                    val chatTitle = document.get(TITLE)
 
-                    // Process each chatLine here
-                    if (chatTitle != null) {
-                        Log.d("Read Success", "Chat: ${chatTitle}")
-                    }
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore Error", "Error reading document", e)
-            }
+        firestoreDBRepository.fetchIndividualSavedTextGenerationChat(
+            user = user,
+            id = id,
+            callback = {_uiState.value = it},
+            result = {_savedTextGenerationChatContent.value = it}
+        )
+
+
+//        val firestore = FirebaseFirestore.getInstance()
+//
+//        firestore.collection(USER_PATH_FIRESTORE)
+//            .document(email)
+//            .collection(SAVED_TEXTGENERATION)
+//            .get()
+//            .addOnSuccessListener { querySnapshot ->
+//                for (document in querySnapshot) {
+//                    val chatTitle = document.get(TITLE)
+//
+//                    // Process each chatLine here
+//                    if (chatTitle != null) {
+//                        Log.d("Read Success", "Chat: ${chatTitle}")
+//                    }
+//                }
+//            }
+//            .addOnFailureListener { e ->
+//                Log.e("Firestore Error", "Error reading document", e)
+//            }
     }
 
     fun readUserListData(user: FirebaseUser) {
@@ -161,48 +203,6 @@ class AuthViewModel @Inject constructor(
                 _savedTextGenerationChatList.value = it
             }
         )
-
-
-
-
-
-
-
-        ///
-//        val firestore = FirebaseFirestore.getInstance()
-//
-//        firestore.collection(USER_PATH_FIRESTORE)
-//            .document(email)
-//            .collection(SAVED_TEXTGENERATION)
-//            .get()
-//            .addOnSuccessListener { querySnapshot ->
-//                if (querySnapshot != null && !querySnapshot.isEmpty) {
-//
-//                    for (document in querySnapshot.documents) {
-//                        val chatData = document.get("Chat")
-//                        val chatLine = chatData as List<HashMap<*,*>>
-//                        for (i in chatLine) {
-//                            val chat = i["chat"] as String
-//                            val isUser = i["user"] as Boolean
-//
-//                            Log.d("Read Success", "$isUser = $chat")
-//                        }
-//
-//                        // Process each chatLine here
-//
-//                        if (chatData != null) {
-//                            //Log.d("Read Success", "Chat data: ${chatData}")
-//                        } else {
-//                           // Log.d("Read Success", "Chat data: null")
-//                        }
-//                    }
-//                } else {
-//                   // Log.d("Read Success", "No documents found or QuerySnapshot is null")
-//                }
-//            }
-//            .addOnFailureListener { e ->
-//              //  Log.e("Firestore Error", "Error reading document", e)
-//            }
     }
 
 

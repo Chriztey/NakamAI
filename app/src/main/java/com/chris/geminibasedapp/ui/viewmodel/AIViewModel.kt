@@ -4,9 +4,16 @@ import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chris.geminibasedapp.common.ChatLine
+import com.chris.geminibasedapp.common.ImageChatLine
+import com.chris.geminibasedapp.common.ImagePromptState
 import com.chris.geminibasedapp.common.PromptState
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.source.AIRepository
+import com.chris.geminibasedapp.source.AuthRepository
+import com.chris.geminibasedapp.source.FirestoreDBRepository
+import com.chris.geminibasedapp.utils.Constants
+import com.chris.geminibasedapp.utils.DataConversion
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +25,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AIViewModel @Inject constructor(
-    private val aiRepository: AIRepository
+    private val authRepository: AuthRepository,
+    private val aiRepository: AIRepository,
+    private val firestoreDBRepository: FirestoreDBRepository,
+
 ): ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> =
@@ -31,14 +41,22 @@ class AIViewModel @Inject constructor(
     val imagePromptState: StateFlow<Bitmap?> =
         _imagePromptState.asStateFlow()
 
-    private val _promptState: MutableStateFlow<PromptState> =
+    private val _chatRoomStateTextGen: MutableStateFlow<PromptState> =
         MutableStateFlow(PromptState())
-    val promptState: StateFlow<PromptState> =
-        _promptState.asStateFlow()
+    val chatRoomStateTextGen: StateFlow<PromptState> =
+        _chatRoomStateTextGen.asStateFlow()
+
+    private val _chatRoomStateMultiModal: MutableStateFlow<ImagePromptState> =
+        MutableStateFlow(ImagePromptState())
+    val chatRoomStateMultiModal: StateFlow<ImagePromptState> =
+        _chatRoomStateMultiModal.asStateFlow()
+
+    val currentUser = authRepository.getCurrentUser()
 
     fun sendTextImagePrompt(
         bitmap: Bitmap,
-        prompt: String
+        prompt: String,
+        selectedImage: Bitmap?
     ) {
         _uiState.value = UiState.Loading
 
@@ -50,9 +68,12 @@ class AIViewModel @Inject constructor(
                     _uiState.value = it
                 },
                 result = {
-                    updateChat(
+
+
+                    updateChatMultiModal(
                         isUser = false,
-                        chat = it
+                        chat = it,
+                        image = selectedImage
                     )
                 }
             )
@@ -71,7 +92,7 @@ class AIViewModel @Inject constructor(
                     _uiState.value = it
                 },
                 result = {
-                    _promptState.update {
+                    _chatRoomStateTextGen.update {
                         current -> current.copy(
                             chat = current.chat +
                                     ChatLine(
@@ -80,16 +101,16 @@ class AIViewModel @Inject constructor(
                         )
                     }
                 },
-                inquiry = {
-                    _promptState.update {
-                            current -> current.copy(
-                        chat = current.chat +
-                                ChatLine(
-                                    chat = it,
-                                    isUser = true)
-                    )
-                    }
-                }
+//                inquiry = {
+//                    _promptState.update {
+//                            current -> current.copy(
+//                        chat = current.chat +
+//                                ChatLine(
+//                                    chat = it,
+//                                    isUser = true)
+//                    )
+//                    }
+//                }
             )
         }
 
@@ -103,12 +124,12 @@ class AIViewModel @Inject constructor(
         _uiState.value = UiState.Success("Image Loaded")
     }
 
-    fun updateChat(
+    fun updateChatTextGen(
         isUser: Boolean,
-        chat: String
+        chat: String,
     ) {
 
-        _promptState.update {
+        _chatRoomStateTextGen.update {
                 current -> current.copy(
             chat = current.chat +
                     ChatLine(
@@ -118,12 +139,98 @@ class AIViewModel @Inject constructor(
         }
     }
 
+    fun updateChatMultiModal(
+        isUser: Boolean,
+        chat: String,
+        image: Bitmap? = null,
+    ) {
 
-    fun clearChat() {
-        _promptState.update {
+        _chatRoomStateMultiModal.update {
+                current -> current.copy(
+            chat = current.chat +
+                    ImageChatLine(
+                        image = image,
+                        chat = chat,
+                        isUser = isUser)
+        )
+        }
+    }
+
+    fun clearChatMultiModal() {
+
+        _uiState.value = UiState.Loading
+
+        _chatRoomStateMultiModal.update {
+                current -> current.copy(
+            chat = emptyList()
+        )
+        }
+
+        _uiState.value = UiState.Success("Cleared")
+    }
+
+
+    fun clearChatTextGen() {
+
+        _uiState.value = UiState.Loading
+
+        _chatRoomStateTextGen.update {
             current -> current.copy(
                 chat = emptyList()
             )
         }
+        _uiState.value = UiState.Success("Cleared")
     }
+
+
+    fun saveTextGenerationChat(
+        user: FirebaseUser,
+        title: String,
+        chatList: List<ChatLine>
+    ) {
+
+
+        val data = DataConversion.textGenerationData(
+            title = title,
+            chatList = chatList
+        )
+
+        _uiState.value = UiState.Loading
+
+
+
+        firestoreDBRepository.saveChat(
+            title = title,
+            textGenerationChat = data,
+            user = user,
+            callback = {
+                _uiState.value = it
+            },
+            collection = Constants.SAVED_TEXTGENERATION
+        )
+    }
+
+    fun saveMultiModalChat(
+        user: FirebaseUser,
+        title: String,
+        chatList: List<ImageChatLine>
+    ) {
+        val data = DataConversion.multiModalData(
+            title = title,
+            chatList = chatList
+        )
+
+        _uiState.value = UiState.Loading
+
+        firestoreDBRepository.saveChat(
+            title = title,
+            textGenerationChat = data,
+            user = user,
+            callback = {
+                _uiState.value = it
+            },
+            collection = Constants.SAVED_MULTIMODAL
+        )
+    }
+
 }

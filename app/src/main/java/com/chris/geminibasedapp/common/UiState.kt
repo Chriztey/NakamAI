@@ -1,5 +1,7 @@
 package com.chris.geminibasedapp.common
 
+import android.graphics.Bitmap
+
 /**
  * A sealed hierarchy describing the state of the text generation.
  */
@@ -30,9 +32,24 @@ data class PromptState (
     val chat : List<ChatLine> = emptyList()
 )
 
+data class ImagePromptState(
+    val chat: List<ImageChatLine> = emptyList()
+)
+
 data class ChatLine(
     val chat : String,
     val isUser : Boolean
+)
+
+data class ImageChatLine(
+    val image: Bitmap?,
+    val chat : String,
+    val isUser : Boolean
+)
+
+data class SavedChat(
+    val id: String,
+    val title: String
 )
 
 
