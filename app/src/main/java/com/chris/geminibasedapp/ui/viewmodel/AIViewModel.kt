@@ -9,6 +9,7 @@ import com.chris.geminibasedapp.common.ImageChatLine
 import com.chris.geminibasedapp.common.ImageChatLineInStorage
 import com.chris.geminibasedapp.common.ImagePromptState
 import com.chris.geminibasedapp.common.PromptState
+import com.chris.geminibasedapp.common.SavedChat
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.source.AIRepository
 import com.chris.geminibasedapp.source.AuthRepository
@@ -53,6 +54,17 @@ class AIViewModel @Inject constructor(
         MutableStateFlow(ImagePromptState())
     val chatRoomStateMultiModal: StateFlow<ImagePromptState> =
         _chatRoomStateMultiModal.asStateFlow()
+
+    private val _savedTextGenerationChatList: MutableStateFlow<List<SavedChat>> = MutableStateFlow(
+        emptyList()
+    )
+    val savedTextGenerationChatList: StateFlow<List<SavedChat>> = _savedTextGenerationChatList.asStateFlow()
+
+    private val _savedTextGenerationChatContent: MutableStateFlow<List<ChatLine>> = MutableStateFlow(
+        emptyList()
+    )
+    val savedTextGenerationChatContent: StateFlow<List<ChatLine>> = _savedTextGenerationChatContent.asStateFlow()
+
 
     val currentUser = authRepository.getCurrentUser()
 
@@ -246,5 +258,32 @@ class AIViewModel @Inject constructor(
             }
         }
     }
+
+    fun readUserSavedTextGenChat(user: FirebaseUser) {
+
+        firestoreDBRepository.fetchSavedTextGenerationChat(
+            user = user,
+            callback = {
+                _uiState.value = it
+            },
+            result = {
+                _savedTextGenerationChatList.value = it
+            }
+        )
+    }
+
+    fun readUserData(
+        user: FirebaseUser,
+        id: String
+    ) {
+
+        firestoreDBRepository.fetchIndividualSavedTextGenerationChat(
+            user = user,
+            id = id,
+            callback = {_uiState.value = it},
+            result = {_savedTextGenerationChatContent.value = it}
+        )
+    }
+
 
 }

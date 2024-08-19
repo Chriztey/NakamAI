@@ -29,7 +29,7 @@ fun HomeScreen() {
         }
         when (tabIndex) {
 
-            0 -> DashboardScreen()
+            0 -> SavedTextGenItemScreen(documentId = "gd")
             1 -> TextPromptScreen()
             2 -> ImagePromptScreen()
         }
