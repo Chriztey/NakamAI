@@ -45,6 +45,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,8 +64,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.R
 import com.chris.geminibasedapp.common.ImageChatLine
 import com.chris.geminibasedapp.common.UiState
+import com.chris.geminibasedapp.common.imageChatLineToStorage
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
+import kotlinx.coroutines.launch
 import java.io.InputStream
+import java.util.UUID
 
 @Composable
 fun ImagePromptScreen(
@@ -80,6 +84,8 @@ fun ImagePromptScreen(
             null
         }
     }
+
+    val scope = rememberCoroutineScope()
 
     var clearChatConfirmation by remember {
         mutableStateOf(false)
@@ -101,6 +107,17 @@ fun ImagePromptScreen(
     }
 
     var localFocusManager = LocalFocusManager.current
+
+    var chatTitle by remember {
+        mutableStateOf("")
+    }
+
+    var saveChatConfirmation by remember {
+        mutableStateOf(false)
+    }
+    var saveChatTitle by remember {
+        mutableStateOf(false)
+    }
 
     var hasCameraPermission by remember { mutableStateOf(false) }
 
@@ -147,7 +164,6 @@ fun ImagePromptScreen(
 
                 if (bitmap != null) {
                     aiViewModel.updateBitmap(bitmap)
-
                 }
             }
         }
@@ -374,7 +390,10 @@ fun ImagePromptScreen(
                             }
 
                             IconButton(onClick = {
-                                /*TODO*/
+
+
+                                saveChatConfirmation = true
+
                             }) {
                                 Icon(painter = painterResource(
                                     id = R.drawable.baseline_save_24),
@@ -418,6 +437,46 @@ fun ImagePromptScreen(
                             Toast.makeText(context, "Chat Cleared", Toast.LENGTH_SHORT).show()},
                         cancelAction = {clearChatConfirmation = false}
                         )
+                }
+
+                if (saveChatConfirmation) {
+                    SaveChatConfirmationDialog(
+                        confirm = {
+                            saveChatTitle = true
+
+                            saveChatConfirmation = false
+                        },
+                        dismiss = {saveChatConfirmation = false})
+                }
+
+                if(saveChatTitle) {
+
+                    ChatTitleTextField(
+                        modifier = Modifier.align(Alignment.Center),
+                        chatTitle = chatTitle,
+                        onValueChangeTitle = { chatTitle = it },
+                        saveChat = {
+
+                            scope.launch {
+                                aiViewModel.saveMultiModalChat(
+                                    context = context,
+                                    user = aiViewModel.currentUser!!,
+                                    title = chatTitle,
+                                    chatList = imageChatLineToStorage(
+                                        title = chatTitle,
+                                        imageChatLine = promptState.chat)
+                                )
+
+
+
+                                Toast.makeText(context, "Chat Saved", Toast.LENGTH_SHORT).show()
+                            }
+
+
+
+                        },
+                        onDismiss = { saveChatTitle = false }
+                    )
                 }
 
                 if (uiState is UiState.Loading) {

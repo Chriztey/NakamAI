@@ -1,6 +1,7 @@
 package com.chris.geminibasedapp.common
 
 import android.graphics.Bitmap
+import java.util.UUID
 
 /**
  * A sealed hierarchy describing the state of the text generation.
@@ -47,6 +48,13 @@ data class ImageChatLine(
     val isUser : Boolean
 )
 
+data class ImageChatLineInStorage(
+    val image: Bitmap?,
+    val imageId : String?,
+    val chat: String,
+    val isUser: Boolean
+)
+
 data class SavedChat(
     val id: String,
     val title: String
@@ -59,4 +67,39 @@ sealed interface AuthState {
     object Unauthenticated : AuthState
     object Loading : AuthState
     data class Error(val message: String) : AuthState
+}
+
+fun imageChatLineToStorage(
+    title: String,
+    imageChatLine: List<ImageChatLine>,
+
+): List<ImageChatLineInStorage> {
+
+    val tempList : MutableList<ImageChatLineInStorage> = mutableListOf()
+    var imageId = 1
+
+
+    for (i in imageChatLine) {
+        tempList.add(
+            ImageChatLineInStorage(
+                image = i.image,
+                imageId = if (i.image != null) {
+                    //UUID.randomUUID().toString()
+                    "$title-$imageId"
+                } else null,
+                chat = i.chat,
+                isUser = i.isUser
+            )
+
+        )
+
+        imageId++
+
+
+
+    }
+
+    return tempList
+
+
 }

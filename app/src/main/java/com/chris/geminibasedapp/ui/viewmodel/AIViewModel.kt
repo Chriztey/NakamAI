@@ -1,10 +1,12 @@
 package com.chris.geminibasedapp.ui.viewmodel
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chris.geminibasedapp.common.ChatLine
 import com.chris.geminibasedapp.common.ImageChatLine
+import com.chris.geminibasedapp.common.ImageChatLineInStorage
 import com.chris.geminibasedapp.common.ImagePromptState
 import com.chris.geminibasedapp.common.PromptState
 import com.chris.geminibasedapp.common.UiState
@@ -13,6 +15,7 @@ import com.chris.geminibasedapp.source.AuthRepository
 import com.chris.geminibasedapp.source.FirestoreDBRepository
 import com.chris.geminibasedapp.utils.Constants
 import com.chris.geminibasedapp.utils.DataConversion
+import com.chris.geminibasedapp.utils.StorageUtil
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -211,9 +214,10 @@ class AIViewModel @Inject constructor(
     }
 
     fun saveMultiModalChat(
+        context: Context,
         user: FirebaseUser,
         title: String,
-        chatList: List<ImageChatLine>
+        chatList: List<ImageChatLineInStorage>
     ) {
         val data = DataConversion.multiModalData(
             title = title,
@@ -231,6 +235,16 @@ class AIViewModel @Inject constructor(
             },
             collection = Constants.SAVED_MULTIMODAL
         )
+
+        for (chat in chatList) {
+            if (chat.imageId != null) {
+                StorageUtil.uploadToStorage(
+                    chat.image!!,
+                    context,
+                    chat.imageId
+                )
+            }
+        }
     }
 
 }
