@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,7 +20,8 @@ import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 
 @Composable
 fun SavedTextGenItemScreen(
-    documentId: String
+    documentId: String,
+    title: String
 ) {
     val aiViewModel = hiltViewModel<AIViewModel>()
 
@@ -33,6 +35,8 @@ fun SavedTextGenItemScreen(
         Surface(
             modifier = Modifier.padding(paddingValue)
         ) {
+            Text(text = title)
+
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 32.dp, horizontal = 16.dp)) {

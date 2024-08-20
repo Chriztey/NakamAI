@@ -20,7 +20,9 @@ import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 import com.chris.geminibasedapp.utils.Constants
 
 @Composable
-fun SavedTextGenerationChatScreen() {
+fun SavedTextGenerationChatScreen(
+    onItemClick: (String, String) -> Unit
+) {
 
     val aiViewModel = hiltViewModel<AIViewModel>()
 
@@ -46,6 +48,7 @@ fun SavedTextGenerationChatScreen() {
 
                 items(savedTextGenChat) {chatTitle ->
                     ListCard(title = chatTitle.title) {
+                        onItemClick(chatTitle.id,chatTitle.title)
                     }
                 }
 

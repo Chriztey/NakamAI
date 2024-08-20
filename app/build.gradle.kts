@@ -7,6 +7,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -132,6 +133,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
     // add the dependency for the Google AI client SDK for Android
     implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
@@ -149,6 +151,9 @@ dependencies {
     kaptTest ("com.google.dagger:hilt-compiler:2.51.1")
 
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
 }
 
