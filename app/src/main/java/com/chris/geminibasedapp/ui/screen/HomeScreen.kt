@@ -29,7 +29,7 @@ fun HomeScreen() {
         }
         when (tabIndex) {
 
-            0 -> SavedTextGenItemScreen(documentId = "gd")
+            0 -> SavedMultiModalItemScreen(documentId = "qwerty")
             1 -> TextPromptScreen()
             2 -> ImagePromptScreen()
         }

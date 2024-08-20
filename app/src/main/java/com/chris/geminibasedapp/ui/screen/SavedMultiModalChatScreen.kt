@@ -1,14 +1,11 @@
 package com.chris.geminibasedapp.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,7 +17,7 @@ import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 import com.chris.geminibasedapp.utils.Constants
 
 @Composable
-fun SavedTextGenerationChatScreen() {
+fun SavedMultiModalChatScreen() {
 
     val aiViewModel = hiltViewModel<AIViewModel>()
 
@@ -29,7 +26,7 @@ fun SavedTextGenerationChatScreen() {
 
     LaunchedEffect(Unit) {
         aiViewModel.readUserSavedChatList(
-            path = Constants.SAVED_TEXTGENERATION,
+            path = Constants.SAVED_MULTIMODAL,
             user = aiViewModel.currentUser!!)
     }
 
@@ -56,17 +53,3 @@ fun SavedTextGenerationChatScreen() {
 }
 
 
-@Composable
-fun ListCard(
-    title: String,
-    itemOnClick: () -> Unit
-) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = { itemOnClick() }
-    ) {
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = title)
-    }
-}

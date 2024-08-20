@@ -118,29 +118,29 @@ fun DashboardScreen() {
                 }
 
 
-                Button(onClick = { authViewModel.readUserData(
-                    user!!,
-                    id = "title"
-                ) }) {
-                    Text(text = "firestore chat")
-                }
-                Button(onClick = { authViewModel.readUserListData(
-                    user!!
-                ) }) {
-                    Text(text = "firestore list")
-                }
+//                Button(onClick = { authViewModel.readUserData(
+//                    user!!,
+//                    id = "title"
+//                ) }) {
+//                    Text(text = "firestore chat")
+//                }
+//                Button(onClick = { authViewModel.readUserListData(
+//                    user!!
+//                ) }) {
+//                    Text(text = "firestore list")
+//                }
 
-                if (savedTextGenerationSavedList.isNotEmpty()) {
-                    for (i in savedTextGenerationSavedList) {
-                        Text(text = i.title )
-                    }
-                }
-
-                if(savedTextGenerationChatContent.isNotEmpty()) {
-                    for (chatContent in savedTextGenerationChatContent) {
-                        Text(text = "${chatContent.isUser} : ${chatContent.chat}")
-                    }
-                }
+//                if (savedTextGenerationSavedList.isNotEmpty()) {
+//                    for (i in savedTextGenerationSavedList) {
+//                        Text(text = i.title )
+//                    }
+//                }
+//
+//                if(savedTextGenerationChatContent.isNotEmpty()) {
+//                    for (chatContent in savedTextGenerationChatContent) {
+//                        Text(text = "${chatContent.isUser} : ${chatContent.chat}")
+//                    }
+//                }
 
             }
 

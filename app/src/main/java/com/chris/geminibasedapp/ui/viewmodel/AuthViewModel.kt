@@ -192,18 +192,18 @@ class AuthViewModel @Inject constructor(
 //            }
     }
 
-    fun readUserListData(user: FirebaseUser) {
-
-        firestoreDBRepository.fetchSavedTextGenerationChat(
-            user = user,
-            callback = {
-                _uiState.value = it
-            },
-            result = {
-                _savedTextGenerationChatList.value = it
-            }
-        )
-    }
+//    fun readUserListData(user: FirebaseUser) {
+//
+//        firestoreDBRepository.fetchSavedChatList(
+//            user = user,
+//            callback = {
+//                _uiState.value = it
+//            },
+//            result = {
+//                _savedTextGenerationChatList.value = it
+//            }
+//        )
+//    }
 
 
 }

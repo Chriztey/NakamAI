@@ -66,6 +66,7 @@ import com.chris.geminibasedapp.common.ImageChatLine
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.common.imageChatLineToStorage
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
+import com.chris.geminibasedapp.utils.DataConversion
 import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.util.UUID
@@ -75,15 +76,7 @@ fun ImagePromptScreen(
 
 ) {
 
-    fun uriToBitmap(context: Context, uri: Uri): Bitmap? {
-        return try {
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            BitmapFactory.decodeStream(inputStream)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
+
 
     val scope = rememberCoroutineScope()
 
@@ -160,7 +153,7 @@ fun ImagePromptScreen(
             if (it != null) {
 
 
-                val bitmap = uriToBitmap(context, it)
+                val bitmap = DataConversion.uriToBitmap(context, it)
 
                 if (bitmap != null) {
                     aiViewModel.updateBitmap(bitmap)

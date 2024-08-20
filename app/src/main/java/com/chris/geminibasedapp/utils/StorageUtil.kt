@@ -3,10 +3,13 @@ package com.chris.geminibasedapp.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import com.google.firebase.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 
 class StorageUtil {
@@ -54,6 +57,18 @@ class StorageUtil {
                 }
             }
 
+        }
+
+        suspend fun downloadImage(imageId: String): Uri? {
+            val storage = Firebase.storage
+            val storageRef = storage.reference.child("images/$imageId.jpg")
+
+            return try {
+                storageRef.downloadUrl.await() // Await the result asynchronously
+            } catch (e: Exception) {
+                Log.e("DownloadImage", "Error downloading image: ${e.message}", e)
+                null
+            }
         }
 
     }

@@ -65,6 +65,11 @@ class AIViewModel @Inject constructor(
     )
     val savedTextGenerationChatContent: StateFlow<List<ChatLine>> = _savedTextGenerationChatContent.asStateFlow()
 
+    private val _savedMultiModalChatContent: MutableStateFlow<List<ImageChatLineInStorage>> = MutableStateFlow(
+        emptyList()
+    )
+    val savedMultiModalChatContent: StateFlow<List<ImageChatLineInStorage>> = _savedMultiModalChatContent.asStateFlow()
+
 
     val currentUser = authRepository.getCurrentUser()
 
@@ -259,13 +264,16 @@ class AIViewModel @Inject constructor(
         }
     }
 
-    fun readUserSavedTextGenChat(user: FirebaseUser) {
+    fun readUserSavedChatList(
+        path: String,
+        user: FirebaseUser) {
 
-        firestoreDBRepository.fetchSavedTextGenerationChat(
+        firestoreDBRepository.fetchSavedChatList(
             user = user,
             callback = {
                 _uiState.value = it
             },
+            path = path,
             result = {
                 _savedTextGenerationChatList.value = it
             }
@@ -282,6 +290,19 @@ class AIViewModel @Inject constructor(
             id = id,
             callback = {_uiState.value = it},
             result = {_savedTextGenerationChatContent.value = it}
+        )
+    }
+
+    fun readUserMultiModalChatData(
+        user: FirebaseUser,
+        id: String
+    ) {
+
+        firestoreDBRepository.fetchIndividualSavedMultiModalChat(
+            user = user,
+            id = id,
+            callback = {_uiState.value = it},
+            result = {_savedMultiModalChatContent.value = it}
         )
     }
 
