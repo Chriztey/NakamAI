@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import com.chris.geminibasedapp.common.UiState
 import com.google.firebase.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -40,6 +41,7 @@ class StorageUtil {
 
             val byteArray: ByteArray? = bitmapToByteArray(bitmap)
 
+
             byteArray?.let {
                 var uploadTask = spaceRef.putBytes(byteArray)
                 uploadTask.addOnFailureListener{
@@ -69,6 +71,23 @@ class StorageUtil {
                 Log.e("DownloadImage", "Error downloading image: ${e.message}", e)
                 null
             }
+        }
+
+        fun deleteImageFromStorage(imageId: String, callback: (UiState) -> Unit) {
+            // Get a reference to the image in Firebase Storage
+            val storageRef = FirebaseStorage.getInstance().reference.child("images/$imageId.jpg")
+
+            // Delete the image
+            storageRef.delete()
+                .addOnSuccessListener {
+                    // File deleted successfully
+                    callback(UiState.Success("Deleted"))
+                }
+                .addOnFailureListener { exception ->
+                    // Handle any errors
+                    exception.printStackTrace()
+                    callback(UiState.Error(exception.message.toString()))
+                }
         }
 
     }

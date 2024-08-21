@@ -16,6 +16,7 @@ import com.chris.geminibasedapp.utils.Constants.SAVED_MULTIMODAL
 import com.chris.geminibasedapp.utils.Constants.SAVED_TEXTGENERATION
 import com.chris.geminibasedapp.utils.Constants.TITLE
 import com.chris.geminibasedapp.utils.Constants.USER_PATH_FIRESTORE
+import com.google.ai.client.generativeai.Chat
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
@@ -70,11 +71,13 @@ class FirestoreDBRepoImplementation @Inject constructor(
                     Log.d("Read Success", document.id)
                     val chatId = document.id
                     val chatTitle = document.get(TITLE) as String
+                    val chat = document.get(CHAT)!!
                     Log.d("Read Success", chatTitle)
                     savedList.add(
                         SavedChat(
                             id = chatId,
-                            title = chatTitle
+                            title = chatTitle,
+                            chat = chat
                         )
                     )
                 }

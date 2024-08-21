@@ -57,7 +57,8 @@ data class ImageChatLineInStorage(
 
 data class SavedChat(
     val id: String,
-    val title: String
+    val title: String,
+    val chat: Any
 )
 
 

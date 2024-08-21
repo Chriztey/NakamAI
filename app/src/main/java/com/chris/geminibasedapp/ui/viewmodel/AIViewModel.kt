@@ -308,5 +308,34 @@ class AIViewModel @Inject constructor(
         )
     }
 
+    fun deleteSavedMultiModalChat(
+        user: FirebaseUser,
+        documentId: String,
+
+    ) {
+        firestoreDBRepository.deleteSavedChat(
+            user = user,
+            collection = Constants.SAVED_MULTIMODAL,
+            documentId = documentId,
+            callback = {_uiState.value = it}
+        )
+
+
+    }
+
+    fun deleteMultiModalChatImage(
+
+        imageId: List<String>
+    ) {
+
+
+        for (i in imageId) {
+            StorageUtil.deleteImageFromStorage(
+                imageId = i,
+                callback = {_uiState.value = it}
+            )
+        }
+    }
+
 
 }
