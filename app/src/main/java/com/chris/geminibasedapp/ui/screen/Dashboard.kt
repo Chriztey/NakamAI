@@ -3,14 +3,20 @@ package com.chris.geminibasedapp.ui.screen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -37,7 +43,10 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    navigateToSavedMultiModal: () -> Unit,
+    navigateToSavedTextGen: () -> Unit
+) {
 
     val authViewModel = hiltViewModel<AuthViewModel>()
     val user = authViewModel.currentUser
@@ -97,49 +106,65 @@ fun DashboardScreen() {
                             id = R.drawable.google_ai_gemini),
                         contentDescription = "gemini ai" )
                 }
+
+                HorizontalDivider(thickness = 4.dp)
+
+                Text(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    style = MaterialTheme.typography.headlineSmall,
+                    text = "Saved Chat")
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                    Button(
+                        onClick = { navigateToSavedTextGen() },
+                        shape = RoundedCornerShape(8.dp)
+                        ) {
+                        Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
+                        Text(text = "Text-Generation")
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Button(
+                        onClick = {navigateToSavedMultiModal()},
+                        shape = RoundedCornerShape(8.dp)
+                        ) {
+                        Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
+                        Text(text = "Multi-Modal")
+                    }
+                }
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(
+                        modifier = Modifier
+                            .padding(32.dp),
+
+                        onClick = {
+                            authViewModel.signOut()
+                        }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_logout_24),
+                            contentDescription = "logout"
+                        )
+                    }
+                }
                 
-                Button(onClick = {
-
-                    authViewModel.signInWithGoogle(
-                        credentialManager,
-                        context
-                    )
-                    }) {
-                    Text(text = "Login")
-                }
-
-                Button(onClick = { authViewModel.signOut() }) {
-                    Text(text = "Signout")
-                }
-                Button(onClick = { authViewModel.createData(
-                    user!!,"Dashboard",chatLine
-                ) }) {
-                    Text(text = "write")
-                }
-
-
-//                Button(onClick = { authViewModel.readUserData(
-//                    user!!,
-//                    id = "title"
-//                ) }) {
-//                    Text(text = "firestore chat")
-//                }
-//                Button(onClick = { authViewModel.readUserListData(
-//                    user!!
-//                ) }) {
-//                    Text(text = "firestore list")
-//                }
-
-//                if (savedTextGenerationSavedList.isNotEmpty()) {
-//                    for (i in savedTextGenerationSavedList) {
-//                        Text(text = i.title )
-//                    }
-//                }
+//                Button(onClick = {
 //
-//                if(savedTextGenerationChatContent.isNotEmpty()) {
-//                    for (chatContent in savedTextGenerationChatContent) {
-//                        Text(text = "${chatContent.isUser} : ${chatContent.chat}")
-//                    }
+//                    authViewModel.signInWithGoogle(
+//                        credentialManager,
+//                        context
+//                    )
+//                    }) {
+//                    Text(text = "Login")
 //                }
 
             }

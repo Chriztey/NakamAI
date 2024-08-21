@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -51,7 +52,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SavedMultiModalItemScreen(
-    documentId: String
+    documentId: String,
+    title: String
 ) {
 
     val aiViewModel = hiltViewModel<AIViewModel>()
@@ -79,6 +81,12 @@ fun SavedMultiModalItemScreen(
                     .padding(vertical = 32.dp, horizontal = 16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineMedium,
+
+                )
 
 
                 for (chat in savedMultiModalChatItem) {

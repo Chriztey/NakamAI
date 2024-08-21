@@ -17,7 +17,9 @@ import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 import com.chris.geminibasedapp.utils.Constants
 
 @Composable
-fun SavedMultiModalChatScreen() {
+fun SavedMultiModalChatScreen(
+    onItemClick: (String, String) -> Unit
+) {
 
     val aiViewModel = hiltViewModel<AIViewModel>()
 
@@ -43,6 +45,7 @@ fun SavedMultiModalChatScreen() {
 
                 items(savedTextGenChat) {chatTitle ->
                     ListCard(title = chatTitle.title) {
+                        onItemClick(chatTitle.id, chatTitle.title)
                     }
                 }
 
