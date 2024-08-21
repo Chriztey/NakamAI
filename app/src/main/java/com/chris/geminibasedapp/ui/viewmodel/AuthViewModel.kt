@@ -32,6 +32,8 @@ class AuthViewModel @Inject constructor(
         AuthState.Unauthenticated
     )
 
+    val authState: StateFlow<AuthState> = _authState.asStateFlow()
+
     private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(
         UiState.Initial
     )
@@ -59,7 +61,7 @@ class AuthViewModel @Inject constructor(
     private fun checkAuthStatus() {
         if(currentUser == null) {
             _authState.value = AuthState.Unauthenticated
-            Log.d("Login", "Logout")
+            Log.d("Logout", "Logout")
         } else {
             _authState.value = AuthState.Authenticated
             Log.d("Login", "Login")
@@ -76,7 +78,7 @@ class AuthViewModel @Inject constructor(
             authRepository.googleSignIn(
                 credentialManager,
                 context
-            )
+            ) { _authState.value = it }
         }
 
     }

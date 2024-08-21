@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.chris.geminibasedapp.ui.screen.HomeScreen
+import com.chris.geminibasedapp.ui.screen.LoginScreen
 import com.chris.geminibasedapp.ui.screen.SavedMultiModalChatScreen
 import com.chris.geminibasedapp.ui.screen.SavedMultiModalItemScreen
 import com.chris.geminibasedapp.ui.screen.SavedTextGenItemScreen
@@ -22,13 +23,23 @@ fun AppNavigationHost() {
 
     NavHost(
         navController = navHost,
-        startDestination = HomeScreenRoute
+        startDestination = LoginScreenRoute
     ) {
+
+        composable<LoginScreenRoute> {
+            LoginScreen (
+                navigateToHome = {
+                    navHost.navigate(HomeScreenRoute)
+                }
+            )
+        }
 
         composable<HomeScreenRoute> {
             HomeScreen(
                 navigateToSavedMultiModal = { navHost.navigate(SavedMultiModalChatScreenRoute) },
-                navigateToSavedTextGen = { navHost.navigate((SavedTextGenChatScreenRoute))}
+                navigateToSavedTextGen = { navHost.navigate((SavedTextGenChatScreenRoute))},
+                navigateToLogin = {navHost.navigate(LoginScreenRoute)},
+                clearBackStack = {navHost.popBackStack(LoginScreenRoute, false)}
             )
         }
 
@@ -87,3 +98,6 @@ data class SavedMultiModalItemScreenRoute(
     val documentId: String,
     val title: String
 )
+
+@Serializable
+object LoginScreenRoute

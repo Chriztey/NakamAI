@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.R
+import com.chris.geminibasedapp.common.AuthState
 import com.chris.geminibasedapp.common.ChatLine
 import com.chris.geminibasedapp.ui.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
@@ -45,25 +47,25 @@ import kotlinx.coroutines.launch
 @Composable
 fun DashboardScreen(
     navigateToSavedMultiModal: () -> Unit,
-    navigateToSavedTextGen: () -> Unit
+    navigateToSavedTextGen: () -> Unit,
+    clearBackStack: () -> Unit,
+    navigateToLogin: () -> Unit
 ) {
+
 
     val authViewModel = hiltViewModel<AuthViewModel>()
     val user = authViewModel.currentUser
-    val savedTextGenerationSavedList by
-        authViewModel.savedTextGenerationChatList.collectAsState()
-    val savedTextGenerationChatContent by
-    authViewModel.savedTextGenerationChatContent.collectAsState()
 
-    val context = LocalContext.current
-    val credentialManager = CredentialManager.create(context)
-    val scope = rememberCoroutineScope()
 
-    val chatLine =
-        listOf(
-            ChatLine("Hello", true),
-            ChatLine("Yes?", false)
-        )
+    val authState by authViewModel.authState.collectAsState()
+
+    LaunchedEffect(key1 = authState) {
+        when (authState) {
+            AuthState.Unauthenticated -> navigateToLogin()
+            else -> Unit
+        }
+    }
+
 
     Scaffold { paddingValues ->
 
@@ -149,6 +151,7 @@ fun DashboardScreen(
 
                         onClick = {
                             authViewModel.signOut()
+                            clearBackStack()
                         }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_logout_24),
@@ -156,16 +159,7 @@ fun DashboardScreen(
                         )
                     }
                 }
-                
-//                Button(onClick = {
-//
-//                    authViewModel.signInWithGoogle(
-//                        credentialManager,
-//                        context
-//                    )
-//                    }) {
-//                    Text(text = "Login")
-//                }
+
 
             }
 

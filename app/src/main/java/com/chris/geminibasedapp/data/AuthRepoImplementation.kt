@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.credentials.GetCredentialRequest
 import com.chris.geminibasedapp.BuildConfig
+import com.chris.geminibasedapp.common.AuthState
 import com.chris.geminibasedapp.source.AuthRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -23,7 +24,8 @@ class AuthRepoImplementation @Inject constructor(
 
     override suspend fun googleSignIn(
         credentialManager: CredentialManager,
-        context: Context
+        context: Context,
+        callback: (AuthState) -> Unit
     ) {
         val auth : FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -59,6 +61,7 @@ class AuthRepoImplementation @Inject constructor(
                     if (task.isSuccessful) {
 
                         Log.d("Login", "Success")
+                        callback(AuthState.Authenticated)
 //                            _authState.value = AuthState.Authenticated
 //                            createProfile(
 //
@@ -67,6 +70,7 @@ class AuthRepoImplementation @Inject constructor(
                 }
 
         } catch (e: Exception) {
+            callback(AuthState.Unauthenticated)
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
