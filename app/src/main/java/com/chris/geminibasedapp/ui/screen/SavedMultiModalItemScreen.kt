@@ -42,6 +42,8 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.chris.geminibasedapp.common.LoadingBox
+import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 import com.chris.geminibasedapp.utils.DataConversion
 import com.chris.geminibasedapp.utils.StorageUtil
@@ -57,6 +59,7 @@ fun SavedMultiModalItemScreen(
 ) {
 
     val aiViewModel = hiltViewModel<AIViewModel>()
+    val uiState by aiViewModel.uiState.collectAsState()
 
     val savedMultiModalChatItem by aiViewModel.savedMultiModalChatContent.collectAsState()
 
@@ -99,6 +102,10 @@ fun SavedMultiModalItemScreen(
                     ChatBubble(chat = chat.chat, isUser = chat.isUser)
                 }
             }
+        }
+
+        if(uiState == UiState.Loading) {
+            LoadingBox()
         }
     }
 

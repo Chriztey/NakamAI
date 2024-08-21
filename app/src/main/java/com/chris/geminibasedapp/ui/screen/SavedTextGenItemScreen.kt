@@ -1,5 +1,6 @@
 package com.chris.geminibasedapp.ui.screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.chris.geminibasedapp.common.LoadingBox
+import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 
 @Composable
@@ -25,6 +28,7 @@ fun SavedTextGenItemScreen(
     title: String
 ) {
     val aiViewModel = hiltViewModel<AIViewModel>()
+    val uiState by aiViewModel.uiState.collectAsState()
 
     val savedTextGenChatItem by aiViewModel.savedTextGenerationChatContent.collectAsState()
 
@@ -36,22 +40,34 @@ fun SavedTextGenItemScreen(
         Surface(
             modifier = Modifier.padding(paddingValue)
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(16.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 32.dp, horizontal = 16.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineMedium,
                 )
 
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .padding(vertical = 32.dp, horizontal = 16.dp)) {
-                items(savedTextGenChatItem) {chat ->
+                LazyColumn(modifier = Modifier
+                    .fillMaxSize()
+                    //.padding(vertical = 32.dp, horizontal = 16.dp)
+                ) {
+                    items(savedTextGenChatItem) {chat ->
 
-                    ChatBubble(chat = chat.chat, isUser = chat.isUser)
+                        ChatBubble(chat = chat.chat, isUser = chat.isUser)
 
+                    }
                 }
             }
+
         }
+
+        if(uiState == UiState.Loading) {
+            LoadingBox()
+        }
+
     }
 
 }

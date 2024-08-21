@@ -121,16 +121,6 @@ class AIViewModel @Inject constructor(
                         )
                     }
                 },
-//                inquiry = {
-//                    _promptState.update {
-//                            current -> current.copy(
-//                        chat = current.chat +
-//                                ChatLine(
-//                                    chat = it,
-//                                    isUser = true)
-//                    )
-//                    }
-//                }
             )
         }
 
@@ -303,6 +293,18 @@ class AIViewModel @Inject constructor(
             id = id,
             callback = {_uiState.value = it},
             result = {_savedMultiModalChatContent.value = it}
+        )
+    }
+
+    fun deleteSavedTextGenChat(
+        user: FirebaseUser,
+        documentId: String
+    ) {
+        firestoreDBRepository.deleteSavedChat(
+            user = user,
+            collection = Constants.SAVED_TEXTGENERATION,
+            documentId = documentId,
+            callback = {_uiState.value = it}
         )
     }
 

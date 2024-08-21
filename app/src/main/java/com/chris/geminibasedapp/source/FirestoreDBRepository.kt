@@ -36,6 +36,11 @@ interface FirestoreDBRepository {
         result: (List<ImageChatLineInStorage>) -> Unit
     )
 
-    fun deleteSavedTextGenerationChat()
+    fun deleteSavedChat(
+        user: FirebaseUser,
+        collection: String,
+        documentId: String,
+        callback: (UiState) -> Unit,
+    )
 
 }

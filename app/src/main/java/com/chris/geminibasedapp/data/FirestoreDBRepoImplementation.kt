@@ -59,6 +59,8 @@ class FirestoreDBRepoImplementation @Inject constructor(
     ) {
         val savedList : MutableList<SavedChat> = mutableListOf()
 
+        callback(UiState.Loading)
+
         firestore.collection(USER_PATH_FIRESTORE)
             .document(user.email!!)
             .collection(path)
@@ -102,6 +104,8 @@ class FirestoreDBRepoImplementation @Inject constructor(
     ) {
 
         val savedChatList : MutableList<ChatLine> = mutableListOf()
+
+        callback(UiState.Loading)
 
         firestore.collection(USER_PATH_FIRESTORE)
             .document(user.email!!)
@@ -151,6 +155,8 @@ class FirestoreDBRepoImplementation @Inject constructor(
     ) {
         val savedChatList : MutableList<ImageChatLineInStorage> = mutableListOf()
 
+        callback(UiState.Loading)
+
         firestore.collection(USER_PATH_FIRESTORE)
             .document(user.email!!)
             .collection(SAVED_MULTIMODAL)
@@ -194,8 +200,30 @@ class FirestoreDBRepoImplementation @Inject constructor(
             }
     }
 
-    override fun deleteSavedTextGenerationChat() {
-        TODO("Not yet implemented")
+    override fun deleteSavedChat(
+        user: FirebaseUser,
+        collection: String,
+        documentId: String,
+        callback: (UiState) -> Unit
+    ) {
+
+        callback(UiState.Loading)
+
+        firestore.collection(USER_PATH_FIRESTORE)
+            .document(user.email!!)
+            .collection(collection)
+            .document(documentId)
+            .delete()
+            .addOnSuccessListener {
+                // Document successfully deleted
+                callback(UiState.Success("Deleted"))
+            }
+            .addOnFailureListener { e ->
+                // Handle failure
+                e.printStackTrace()
+                callback(UiState.Error(e.message.toString()))
+            }
     }
+
 
 }
