@@ -2,6 +2,7 @@ package com.chris.geminibasedapp.ui.viewmodel
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chris.geminibasedapp.common.ChatLine
@@ -35,6 +36,8 @@ class AIViewModel @Inject constructor(
 
 ): ViewModel() {
 
+
+
     private val _uiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
     val uiState: StateFlow<UiState> =
@@ -55,10 +58,10 @@ class AIViewModel @Inject constructor(
     val chatRoomStateMultiModal: StateFlow<ImagePromptState> =
         _chatRoomStateMultiModal.asStateFlow()
 
-    private val _savedTextGenerationChatList: MutableStateFlow<List<SavedChat>> = MutableStateFlow(
+    private val _savedChatList: MutableStateFlow<List<SavedChat>> = MutableStateFlow(
         emptyList()
     )
-    val savedTextGenerationChatList: StateFlow<List<SavedChat>> = _savedTextGenerationChatList.asStateFlow()
+    val savedChatList: StateFlow<List<SavedChat>> = _savedChatList.asStateFlow()
 
     private val _savedTextGenerationChatContent: MutableStateFlow<List<ChatLine>> = MutableStateFlow(
         emptyList()
@@ -265,7 +268,7 @@ class AIViewModel @Inject constructor(
             },
             path = path,
             result = {
-                _savedTextGenerationChatList.value = it
+                _savedChatList.value = it
             }
         )
     }

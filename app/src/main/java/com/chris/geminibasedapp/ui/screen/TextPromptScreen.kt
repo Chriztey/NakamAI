@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -315,7 +316,7 @@ fun ChatBubble(
                     }
                 )
                 .background(
-                    if (isUser) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.background
+                    if (isUser) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.background
                 )
                 .fillMaxWidth(0.7f)
                 .wrapContentSize()
@@ -325,15 +326,18 @@ fun ChatBubble(
                 ),
             contentAlignment = Alignment.CenterStart
         ) {
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
+            SelectionContainer {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     //.align(Alignment.CenterStart),
-                textAlign = if (isUser) TextAlign.End else TextAlign.Start,
-                text = chat
-            )
+                    textAlign = if (isUser) TextAlign.End else TextAlign.Start,
+                    text = chat
+                )
+            }
+
+
 
         }
     }
@@ -392,7 +396,9 @@ fun ChatTitleTextField(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             Text(
                 modifier = Modifier

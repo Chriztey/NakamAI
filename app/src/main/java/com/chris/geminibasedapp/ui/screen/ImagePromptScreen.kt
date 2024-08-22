@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
@@ -188,15 +189,12 @@ fun ImagePromptScreen(
                             localFocusManager.clearFocus()
 
 
-
                             if (imagePromptState != null) {
                                 aiViewModel.updateChatMultiModal(
                                     isUser = true,
                                     chat = textPrompt,
                                     image = null
                                 )
-
-
 
                                 aiViewModel.sendTextImagePrompt(
                                     bitmap = imagePromptState!!,
@@ -205,7 +203,6 @@ fun ImagePromptScreen(
 
                                 selectedImage()
 
-                                //currentImage = null
                             } else {
                                 Toast.makeText(context, "You haven't add Any Image yet", Toast.LENGTH_SHORT).show()
                             }
@@ -287,32 +284,33 @@ fun ImagePromptScreen(
                                     selectedImage()
                                 } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
                             }) {
-                                Text(text = "What is This?")
-                            }
-
-                            Button(onClick = {
-
-                                aiViewModel.updateChatMultiModal(
-                                    isUser = true,
-                                    chat = "How do i Create This?"
-                                )
-
-                                if (imagePromptState != null) {
-                                    aiViewModel.sendTextImagePrompt(
-                                        imagePromptState!!,
-                                        "How do i Create This?",
-                                        selectedImage = updateChatImage()
-                                        )
-
-                                    selectedImage()
-                                } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
-
-
-                            }) {
                                 Text(
-                                    text = "How do i Create This?",
-                                )
+                                    text = "What is This?")
                             }
+
+//                            Button(onClick = {
+//
+//                                aiViewModel.updateChatMultiModal(
+//                                    isUser = true,
+//                                    chat = "How do i Create This?"
+//                                )
+//
+//                                if (imagePromptState != null) {
+//                                    aiViewModel.sendTextImagePrompt(
+//                                        imagePromptState!!,
+//                                        "How do i Create This?",
+//                                        selectedImage = updateChatImage()
+//                                        )
+//
+//                                    selectedImage()
+//                                } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
+//
+//
+//                            }) {
+//                                Text(
+//                                    text = "How do i Create This?",
+//                                )
+//                            }
 
 
 
@@ -352,13 +350,17 @@ fun ImagePromptScreen(
                                     bitmap = chat.image.asImageBitmap(),
                                     contentDescription = "")
                             }
-                            Text(
-                                modifier = Modifier.padding(4.dp),
-                                text = chat.chat,
-                                style = if(chat.isUser) {MaterialTheme.typography.bodyLarge} else {
-                                    MaterialTheme.typography.bodyMedium
-                                }
-                            )
+
+                            SelectionContainer {
+                                Text(
+                                    modifier = Modifier.padding(4.dp),
+                                    text = chat.chat,
+                                    style = if(chat.isUser) {MaterialTheme.typography.bodyLarge} else {
+                                        MaterialTheme.typography.bodyMedium
+                                    }
+                                )
+                            }
+
                         }
                     }
 

@@ -126,6 +126,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.storage)
+    implementation(libs.androidx.ui.text.google.fonts)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

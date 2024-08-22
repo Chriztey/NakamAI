@@ -86,6 +86,7 @@ fun SavedMultiModalItemScreen(
             ) {
 
                 Text(
+                    modifier = Modifier.padding(bottom = 8.dp),
                     text = title,
                     style = MaterialTheme.typography.headlineMedium,
 

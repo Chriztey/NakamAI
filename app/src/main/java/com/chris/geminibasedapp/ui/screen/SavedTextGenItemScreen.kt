@@ -46,6 +46,7 @@ fun SavedTextGenItemScreen(
                     .padding(vertical = 32.dp, horizontal = 16.dp)
             ) {
                 Text(
+                    modifier = Modifier.padding(bottom = 8.dp),
                     text = title,
                     style = MaterialTheme.typography.headlineMedium,
                 )

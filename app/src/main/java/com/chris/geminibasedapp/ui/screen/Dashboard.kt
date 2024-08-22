@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -76,7 +78,44 @@ fun DashboardScreen(
                 modifier = Modifier
                     .padding(vertical = 32.dp, horizontal = 16.dp)
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Logout")
+                    IconButton(
+                        modifier = Modifier
+                            .padding(end = 8.dp),
+
+                        onClick = {
+                            authViewModel.signOut()
+                            clearBackStack()
+                        }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_logout_24),
+                            contentDescription = "logout"
+                        )
+                    }
+                }
+
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(300.dp)
+                        .padding(16.dp),
+                    painter = painterResource(id = R.drawable.nakamai),
+                    contentDescription = "logo")
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelMedium,
+                    text = "Your AI Nakama, Always by Your Side."
+                )
+
+
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -111,10 +150,17 @@ fun DashboardScreen(
 
                 HorizontalDivider(thickness = 4.dp)
 
-                Text(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.headlineSmall,
-                    text = "Saved Chat")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        style = MaterialTheme.typography.headlineSmall,
+                        text = "Saved Chat"
+                    )
+
+                    Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
+                }
                 Row (
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -125,40 +171,24 @@ fun DashboardScreen(
                         onClick = { navigateToSavedTextGen() },
                         shape = RoundedCornerShape(8.dp)
                         ) {
-                        Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
+                        //Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
                         Text(text = "Text-Generation")
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
 
                     Button(
+                        modifier = Modifier.padding(start = 4.dp),
                         onClick = {navigateToSavedMultiModal()},
                         shape = RoundedCornerShape(8.dp)
                         ) {
-                        Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
+                        //Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
                         Text(text = "Multi-Modal")
                     }
                 }
 
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    IconButton(
-                        modifier = Modifier
-                            .padding(32.dp),
 
-                        onClick = {
-                            authViewModel.signOut()
-                            clearBackStack()
-                        }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_logout_24),
-                            contentDescription = "logout"
-                        )
-                    }
-                }
 
 
             }

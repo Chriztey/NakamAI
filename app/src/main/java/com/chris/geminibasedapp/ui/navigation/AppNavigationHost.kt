@@ -44,12 +44,15 @@ fun AppNavigationHost() {
         }
 
         composable<SavedTextGenChatScreenRoute> {
-            SavedTextGenerationChatScreen {  id, title ->
-                navHost.navigate(SavedTextGenItemScreenRoute(
-                    documentId = id,
-                    title = title)
+            SavedTextGenerationChatScreen(
+                onItemClick = {
+                              id, title ->
+                    navHost.navigate(SavedTextGenItemScreenRoute(
+                        documentId = id,
+                        title = title)
+                    )},
+                onNavigateToHome = {navHost.navigate(HomeScreenRoute)}
                 )
-            }
         }
         
         composable<SavedTextGenItemScreenRoute> {
@@ -61,13 +64,15 @@ fun AppNavigationHost() {
         }
 
         composable<SavedMultiModalChatScreenRoute> {
-            SavedMultiModalChatScreen {  id, title ->
-                navHost.navigate( SavedMultiModalItemScreenRoute (
-                    documentId = id,
-                    title = title
-                )
-                )
-            }
+            SavedMultiModalChatScreen(
+                onItemClick = {  id, title ->
+                    navHost.navigate( SavedMultiModalItemScreenRoute (
+                        documentId = id,
+                        title = title)
+                    )
+                              },
+                onNavigateToHome = {navHost.navigate(HomeScreenRoute)}
+            )
         }
 
         composable<SavedMultiModalItemScreenRoute> {

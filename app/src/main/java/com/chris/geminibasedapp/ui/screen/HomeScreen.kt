@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -14,7 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.common.AuthState
 import com.chris.geminibasedapp.ui.viewmodel.AuthViewModel
@@ -43,7 +47,13 @@ fun HomeScreen(
     Column(modifier = Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
             tabs.forEachIndexed { index, title ->
-                Tab(text = { Text(title) },
+                Tab(text = {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp
+                    ) },
                     selected = tabIndex == index,
                     onClick = { tabIndex = index }
                 )

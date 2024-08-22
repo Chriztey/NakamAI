@@ -1,5 +1,6 @@
 package com.chris.geminibasedapp.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,25 +22,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.R
 import com.chris.geminibasedapp.common.LoadingBox
+import com.chris.geminibasedapp.common.TopBarApp
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 import com.chris.geminibasedapp.utils.Constants
 
 @Composable
 fun SavedTextGenerationChatScreen(
-    onItemClick: (String, String) -> Unit
+    onItemClick: (String, String) -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
 
     val aiViewModel = hiltViewModel<AIViewModel>()
+    val context = LocalContext.current
 
     val uiState by aiViewModel.uiState.collectAsState()
-    val savedTextGenChat by aiViewModel.savedTextGenerationChatList.collectAsState()
+    val savedTextGenChat by aiViewModel.savedChatList.collectAsState()
 
     var confirmDelete by remember {
         mutableStateOf(false)
@@ -60,30 +65,42 @@ fun SavedTextGenerationChatScreen(
         readList()
     }
 
-    Scaffold { paddingValue ->
+    Scaffold(
+        topBar = {
+            TopBarApp(onNavigateToHome = {onNavigateToHome()})
+        }
+    ) { paddingValue ->
         Surface(
             modifier = Modifier
                 .padding( paddingValues = paddingValue )
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 32.dp, horizontal = 16.dp)
-            ) {
-                items(savedTextGenChat) {chatTitle ->
-                    ListCard(
+            if (savedTextGenChat.isEmpty() && uiState != UiState.Loading) {
 
-                        title = chatTitle.title,
-                        itemOnClick = {
-                            onItemClick(chatTitle.id,chatTitle.title)
-                        },
-                        itemDelete = {
-                            selectedChat = chatTitle.id
-                            confirmDelete = true
-                        }
-                    )
+                EmptyList()
+
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 32.dp, horizontal = 16.dp)
+                ) {
+                    items(savedTextGenChat) {chatTitle ->
+                        ListCard(
+
+                            title = chatTitle.title,
+                            itemOnClick = {
+                                onItemClick(chatTitle.id,chatTitle.title)
+                            },
+                            itemDelete = {
+                                selectedChat = chatTitle.id
+                                confirmDelete = true
+                            }
+                        )
+                    }
                 }
             }
+
+
         }
 
         if (confirmDelete) {
@@ -94,6 +111,7 @@ fun SavedTextGenerationChatScreen(
                         user = aiViewModel.currentUser!!,
                         documentId = selectedChat
                     )
+                    Toast.makeText(context, "Chat Deleted", Toast.LENGTH_SHORT).show()
                     readList()
                 }
                 )
@@ -120,11 +138,12 @@ fun ListCard(
         onClick = { itemOnClick() }
     ) {
         Row (
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.padding(8.dp),
-                text = title
+                modifier = Modifier.padding(16.dp),
+                text = title.uppercase()
             )
 
             Spacer(modifier = Modifier.weight(1f))
