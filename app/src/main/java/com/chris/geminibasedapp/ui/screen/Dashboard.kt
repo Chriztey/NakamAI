@@ -27,23 +27,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.credentials.CredentialManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.R
 import com.chris.geminibasedapp.common.AuthState
-import com.chris.geminibasedapp.common.ChatLine
 import com.chris.geminibasedapp.ui.viewmodel.AuthViewModel
-import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
@@ -56,9 +49,6 @@ fun DashboardScreen(
 
 
     val authViewModel = hiltViewModel<AuthViewModel>()
-    val user = authViewModel.currentUser
-
-
     val authState by authViewModel.authState.collectAsState()
 
     LaunchedEffect(key1 = authState) {
@@ -73,7 +63,6 @@ fun DashboardScreen(
 
         Surface(modifier = Modifier
             .padding(paddingValues)) {
-
             Column(
                 modifier = Modifier
                     .padding(vertical = 32.dp, horizontal = 16.dp)
@@ -171,7 +160,6 @@ fun DashboardScreen(
                         onClick = { navigateToSavedTextGen() },
                         shape = RoundedCornerShape(8.dp)
                         ) {
-                        //Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
                         Text(text = "Text-Generation")
                     }
 
@@ -182,15 +170,9 @@ fun DashboardScreen(
                         onClick = {navigateToSavedMultiModal()},
                         shape = RoundedCornerShape(8.dp)
                         ) {
-                        //Icon(painter = painterResource(id = R.drawable.baseline_save_24), contentDescription = "save")
                         Text(text = "Multi-Modal")
                     }
                 }
-
-
-
-
-
             }
 
         }

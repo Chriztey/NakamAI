@@ -1,11 +1,8 @@
 package com.chris.geminibasedapp.ui.screen
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,7 +25,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -52,7 +48,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -63,22 +58,17 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.geminibasedapp.R
-import com.chris.geminibasedapp.common.ImageChatLine
+import com.chris.geminibasedapp.common.ChatTitleTextField
+import com.chris.geminibasedapp.common.ClearChatDialogConfirmation
+import com.chris.geminibasedapp.common.SaveChatConfirmationDialog
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.common.imageChatLineToStorage
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
 import com.chris.geminibasedapp.utils.DataConversion
 import kotlinx.coroutines.launch
-import java.io.InputStream
-import java.util.UUID
 
 @Composable
-fun ImagePromptScreen(
-
-) {
-
-
-
+fun ImagePromptScreen() {
     val scope = rememberCoroutineScope()
 
     var clearChatConfirmation by remember {
@@ -100,7 +90,7 @@ fun ImagePromptScreen(
         mutableStateOf("")
     }
 
-    var localFocusManager = LocalFocusManager.current
+    val localFocusManager = LocalFocusManager.current
 
     var chatTitle by remember {
         mutableStateOf("")
@@ -152,10 +142,7 @@ fun ImagePromptScreen(
         contract = ActivityResultContracts.GetContent(),
         onResult = {
             if (it != null) {
-
-
                 val bitmap = DataConversion.uriToBitmap(context, it)
-
                 if (bitmap != null) {
                     aiViewModel.updateBitmap(bitmap)
                 }
@@ -166,7 +153,6 @@ fun ImagePromptScreen(
 
 
     Scaffold(
-
         bottomBar = {
             BottomAppBar(
                 contentPadding = PaddingValues(8.dp),
@@ -216,9 +202,9 @@ fun ImagePromptScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues ->
         Surface(
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(paddingValues),
             onClick = { /*TODO*/ }) {
 
             Box(
@@ -268,7 +254,6 @@ fun ImagePromptScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Button(onClick = {
-
                                 aiViewModel.updateChatMultiModal(
                                     isUser = true,
                                     chat = "What is This?"
@@ -365,8 +350,6 @@ fun ImagePromptScreen(
                     }
 
 
-
-
                     Row(
                         modifier = Modifier
                             .padding(top = 16.dp)
@@ -385,10 +368,7 @@ fun ImagePromptScreen(
                             }
 
                             IconButton(onClick = {
-
-
                                 saveChatConfirmation = true
-
                             }) {
                                 Icon(painter = painterResource(
                                     id = R.drawable.baseline_save_24),
@@ -482,45 +462,8 @@ fun ImagePromptScreen(
                 }
 
 
-
-
-
             }
         }
     }
 }
 
-@Composable
-fun ClearChatDialogConfirmation(
-    clearChat: () -> Unit,
-    cancelAction: () -> Unit
-) {
-
-    AlertDialog(
-        icon = {
-            Icon(
-                painter = painterResource(
-                    id = R.drawable.baseline_delete_24),
-                contentDescription = "Clear Chat",
-                tint = Color.Red
-            )
-        },
-        title = {
-            Text(text = "Clear Chat")
-        },
-        text = {
-            Text(text = "Are you sure you want to clear all the chat?")
-        },
-        onDismissRequest = { cancelAction() },
-        confirmButton = {
-            Button(onClick = {
-                clearChat()
-                cancelAction()
-
-            }) {
-                Text(text = "Clear Chat")
-            }
-            
-        })
-
-}

@@ -2,7 +2,6 @@ package com.chris.geminibasedapp.ui.viewmodel
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chris.geminibasedapp.common.ChatLine
@@ -35,8 +34,6 @@ class AIViewModel @Inject constructor(
     private val firestoreDBRepository: FirestoreDBRepository,
 
 ): ViewModel() {
-
-
 
     private val _uiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)

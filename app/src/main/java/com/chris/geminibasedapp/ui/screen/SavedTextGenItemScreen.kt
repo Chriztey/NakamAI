@@ -2,7 +2,6 @@ package com.chris.geminibasedapp.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,10 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.chris.geminibasedapp.common.ChatBubble
 import com.chris.geminibasedapp.common.LoadingBox
 import com.chris.geminibasedapp.common.UiState
 import com.chris.geminibasedapp.ui.viewmodel.AIViewModel
@@ -53,16 +52,12 @@ fun SavedTextGenItemScreen(
 
                 LazyColumn(modifier = Modifier
                     .fillMaxSize()
-                    //.padding(vertical = 32.dp, horizontal = 16.dp)
                 ) {
                     items(savedTextGenChatItem) {chat ->
-
                         ChatBubble(chat = chat.chat, isUser = chat.isUser)
-
                     }
                 }
             }
-
         }
 
         if(uiState == UiState.Loading) {
