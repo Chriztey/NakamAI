@@ -20,6 +20,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +31,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -129,6 +134,8 @@ fun ImagePromptScreen() {
         }
     }
 
+    
+
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
@@ -149,6 +156,18 @@ fun ImagePromptScreen() {
             }
         }
     )
+
+    val listState = rememberLazyListState()
+
+    val showButton by remember {
+        derivedStateOf { listState.firstVisibleItemIndex > 0 }
+    }
+
+    fun scrollToBottom() {
+        scope.launch {
+            listState.animateScrollToItem(promptState.chat.size)
+        }
+    }
 
 
 
@@ -193,6 +212,7 @@ fun ImagePromptScreen() {
                                 Toast.makeText(context, "You haven't add Any Image yet", Toast.LENGTH_SHORT).show()
                             }
 
+                            scrollToBottom()
                             textPrompt = ""
                         }) {
                         Icon(
@@ -212,7 +232,8 @@ fun ImagePromptScreen() {
                     .fillMaxSize()
             ) {
                 
-                Column(
+                LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(
@@ -221,189 +242,187 @@ fun ImagePromptScreen() {
                             top = 32.dp,
                             bottom = 8.dp
                         )
-                        .verticalScroll(rememberScrollState()),
                 ) {
-                    if (imagePromptState != null) {
-
-                        Text(
-                            text = "Current Image:",
-                            style = MaterialTheme.typography.titleLarge
+                    item() {
+                        if (imagePromptState != null) {
+                            Text(
+                                text = "Current Image:",
+                                style = MaterialTheme.typography.titleLarge
                             )
 
-                        Image(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                                .size(250.dp)
-                                .clip(RoundedCornerShape(32.dp))
+                            Image(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp)
+                                    .size(250.dp)
+                                    .clip(RoundedCornerShape(32.dp))
                                 ,
-                            contentScale = ContentScale.Fit,
-                            bitmap = imagePromptState!!.asImageBitmap(),
-                            contentDescription = "image")
+                                contentScale = ContentScale.Fit,
+                                bitmap = imagePromptState!!.asImageBitmap(),
+                                contentDescription = "image")
 
-                        HorizontalDivider(thickness = 2.dp)
-                        Text(
-                            modifier = Modifier.padding(top = 8.dp),
-                            text = "Prompt Recommendation:",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                        Row(
-                            modifier = Modifier
-                                .padding(vertical = 4.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Button(onClick = {
-                                aiViewModel.updateChatMultiModal(
-                                    isUser = true,
-                                    chat = "What is This?"
-                                )
+                            HorizontalDivider(thickness = 2.dp)
+                            Text(
+                                modifier = Modifier.padding(top = 8.dp),
+                                text = "Prompt Recommendation:",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                            Row(
+                                modifier = Modifier
+                                    .padding(vertical = 4.dp)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Button(onClick = {
+                                    aiViewModel.updateChatMultiModal(
+                                        isUser = true,
+                                        chat = "What is This?"
+                                    )
 
-                                if (imagePromptState != null) {
-                                    aiViewModel.sendTextImagePrompt(
-                                        imagePromptState!!,
-                                        "What is This?",
-                                        selectedImage = updateChatImage()
+                                    if (imagePromptState != null) {
+                                        aiViewModel.sendTextImagePrompt(
+                                            imagePromptState!!,
+                                            "What is This?",
+                                            selectedImage = updateChatImage()
                                         )
 
-                                    selectedImage()
-                                } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
-                            }) {
-                                Text(
-                                    text = "What is This?")
+                                        selectedImage()
+                                    } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
+
+                                    scrollToBottom()
+
+                                }) {
+                                    Text(
+                                        text = "What is This?")
+                                }
                             }
-
-//                            Button(onClick = {
-//
-//                                aiViewModel.updateChatMultiModal(
-//                                    isUser = true,
-//                                    chat = "How do i Create This?"
-//                                )
-//
-//                                if (imagePromptState != null) {
-//                                    aiViewModel.sendTextImagePrompt(
-//                                        imagePromptState!!,
-//                                        "How do i Create This?",
-//                                        selectedImage = updateChatImage()
-//                                        )
-//
-//                                    selectedImage()
-//                                } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
-//
-//
-//                            }) {
-//                                Text(
-//                                    text = "How do i Create This?",
-//                                )
-//                            }
-
-
-
-                        }
-                        HorizontalDivider(thickness = 2.dp)
-                    } else {
-                        Image(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally)
-                                .size(250.dp)
-                                .clip(CircleShape)
+                            HorizontalDivider(thickness = 2.dp)
+                        } else {
+                            Image(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center)
+                                    //.align(Alignment.CenterHorizontally)
+                                    .size(250.dp)
+                                    .clip(CircleShape)
                                 ,
-                            contentScale = ContentScale.Fit,
-                            painter = painterResource(id = R.drawable.ai_bot_cs),
-                            contentDescription = "placeholder")
+                                contentScale = ContentScale.Fit,
+                                painter = painterResource(id = R.drawable.ai_bot_cs),
+                                contentDescription = "placeholder")
 
-                        Text (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            text = "Hello! This is a multimodal AI. " +
-                                    "Please provide an image and text prompt to get started.",
-                            textAlign = TextAlign.Center
-                        )
+                            Text (
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                text = "Hello! This is a multimodal AI. " +
+                                        "Please provide an image and text prompt to get started.",
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
 
                     if(promptState.chat.isNotEmpty()) {
-                        for (chat in promptState.chat) {
+
+                        items(promptState.chat.size) { index ->
+                            val chat = promptState.chat[index]
                             if (chat.image != null) {
                                 Image(
                                     modifier = Modifier
                                         .size(250.dp)
                                         .padding(16.dp)
-                                        .align(Alignment.Start),
+                                        .align(Alignment.CenterStart),
                                     contentScale = ContentScale.Fit,
                                     bitmap = chat.image.asImageBitmap(),
-                                    contentDescription = "")
+                                    contentDescription = null
+                                )
                             }
 
                             SelectionContainer {
                                 Text(
                                     modifier = Modifier.padding(4.dp),
                                     text = chat.chat,
-                                    style = if(chat.isUser) {MaterialTheme.typography.bodyLarge} else {
+                                    style = if (chat.isUser) {
+                                        MaterialTheme.typography.bodyLarge
+                                    } else {
                                         MaterialTheme.typography.bodyMedium
                                     }
                                 )
                             }
+                        }
+                    }
+
+                    item() {
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            if(promptState.chat.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    clearChatConfirmation = true
+                                }) {
+                                    Icon(painter = painterResource(
+                                        id = R.drawable.baseline_delete_24),
+                                        contentDescription = "clear chat")
+                                }
+
+                                IconButton(onClick = {
+                                    saveChatConfirmation = true
+                                }) {
+                                    Icon(painter = painterResource(
+                                        id = R.drawable.baseline_save_24),
+                                        contentDescription = "save chat")
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            IconButton(onClick = {
+                                if(hasCameraPermission) {
+                                    cameraLauncher.launch()}
+                                else {cameraPermissionLauncher
+                                    .launch(Manifest.permission.CAMERA)}
+                            }) {
+                                Icon(painter = painterResource(
+                                    id = R.drawable.baseline_photo_camera_24),
+                                    contentDescription = "camera launch")
+                            }
+
+                            Spacer(modifier = Modifier.width(4.dp))
+
+                            IconButton(onClick = {
+                                galleryLauncher.launch(
+                                    "image/*")
+                            }) {
+                                Icon(painter = painterResource(
+                                    id = R.drawable.baseline_photo_library_24),
+                                    contentDescription = "gallery launch")
+                            }
 
                         }
                     }
 
-
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        if(promptState.chat.isNotEmpty()) {
-                            IconButton(onClick = {
-                                clearChatConfirmation = true
-                            }) {
-                                Icon(painter = painterResource(
-                                    id = R.drawable.baseline_delete_24),
-                                    contentDescription = "clear chat")
-                            }
-
-                            IconButton(onClick = {
-                                saveChatConfirmation = true
-                            }) {
-                                Icon(painter = painterResource(
-                                    id = R.drawable.baseline_save_24),
-                                    contentDescription = "save chat")
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        IconButton(onClick = {
-                            if(hasCameraPermission) {
-                                cameraLauncher.launch()}
-                            else {cameraPermissionLauncher
-                                .launch(Manifest.permission.CAMERA)}
-                        }) {
-                            Icon(painter = painterResource(
-                                id = R.drawable.baseline_photo_camera_24),
-                                contentDescription = "camera launch")
-                        }
-                        
-                        Spacer(modifier = Modifier.width(4.dp))
-
-                        IconButton(onClick = {
-                            galleryLauncher.launch(
-                                "image/*")
-                        }) {
-                            Icon(painter = painterResource(
-                                id = R.drawable.baseline_photo_library_24),
-                                contentDescription = "gallery launch")
-                        }
-                        
-                    }
-
-                    
                 }
+
+
+                if(showButton) {
+                    FloatingActionButton(
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 8.dp),
+                        onClick = {
+                            scope.launch {
+                                listState.animateScrollToItem(0)
+                            }
+                        }) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.baseline_photo_library_24),
+                            contentDescription = "image preview")
+                    }
+                }
+
 
                 if (clearChatConfirmation) {
                     ClearChatDialogConfirmation(
@@ -441,13 +460,8 @@ fun ImagePromptScreen() {
                                         title = chatTitle,
                                         imageChatLine = promptState.chat)
                                 )
-
-
-
                                 Toast.makeText(context, "Chat Saved", Toast.LENGTH_SHORT).show()
                             }
-
-
 
                         },
                         onDismiss = { saveChatTitle = false }
@@ -460,8 +474,6 @@ fun ImagePromptScreen() {
                         .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f)))
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
-
-
             }
         }
     }
