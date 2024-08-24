@@ -51,7 +51,7 @@ fun ChatBubble(
                 .background(
                     if (isUser) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.background
                 )
-                .fillMaxWidth(0.7f)
+                .fillMaxWidth(0.6f)
                 .wrapContentSize()
                 .align(
                     if (isUser)

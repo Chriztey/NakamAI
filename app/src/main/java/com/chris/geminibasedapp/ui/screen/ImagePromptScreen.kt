@@ -174,6 +174,7 @@ fun ImagePromptScreen() {
     Scaffold(
         bottomBar = {
             BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentPadding = PaddingValues(8.dp),
                 actions = {
                     OutlinedTextField(
@@ -193,7 +194,6 @@ fun ImagePromptScreen() {
                         onClick = {
                             localFocusManager.clearFocus()
 
-
                             if (imagePromptState != null) {
                                 aiViewModel.updateChatMultiModal(
                                     isUser = true,
@@ -209,7 +209,8 @@ fun ImagePromptScreen() {
                                 selectedImage()
 
                             } else {
-                                Toast.makeText(context, "You haven't add Any Image yet", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "You haven't add Any Image yet",
+                                    Toast.LENGTH_SHORT).show()
                             }
 
                             scrollToBottom()
@@ -287,6 +288,7 @@ fun ImagePromptScreen() {
                                         )
 
                                         selectedImage()
+
                                     } else Toast.makeText(context, "You haven't choose any image yet", Toast.LENGTH_SHORT).show()
 
                                     scrollToBottom()

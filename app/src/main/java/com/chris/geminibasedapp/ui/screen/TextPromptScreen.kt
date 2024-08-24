@@ -84,6 +84,7 @@ fun TextPromptScreen(
     Scaffold(
         bottomBar = {
             BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentPadding = PaddingValues(8.dp),
                 actions = {
                     OutlinedTextField(
