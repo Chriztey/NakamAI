@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -91,7 +92,8 @@ fun ChatTitleTextField(
 
     Box(
         modifier = modifier
-            .wrapContentSize()
+            .height(300.dp)
+            //.wrapContentSize()
             .padding(32.dp)
             .clip(RoundedCornerShape(32.dp))
             .background(Color.LightGray.copy(alpha = 0.9f)),
