@@ -59,7 +59,9 @@ fun SavedTextGenerationChatScreen(
 
     Scaffold(
         topBar = {
-            TopBarApp(onNavigateToHome = {onNavigateToHome()})
+            TopBarApp(
+                title = "Saved Text Gen Chat",
+                onNavigateToHome = {onNavigateToHome()})
         }
     ) { paddingValue ->
         Surface(

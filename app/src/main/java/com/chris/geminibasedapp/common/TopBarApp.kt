@@ -17,11 +17,12 @@ import com.chris.geminibasedapp.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarApp(
-    onNavigateToHome: () -> Unit
+    onNavigateToHome: () -> Unit,
+    title: String = "NakamAI"
 ) {
     TopAppBar(
         title = {
-            Text(text = "NakamAI")
+            Text(text = title)
                 },
         navigationIcon = {
             IconButton(onClick = { onNavigateToHome() }) {

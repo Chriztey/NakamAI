@@ -95,33 +95,34 @@ fun ChatTitleTextField(
             .height(300.dp)
             //.wrapContentSize()
             .padding(32.dp)
-            .clip(RoundedCornerShape(32.dp))
-            .background(Color.LightGray.copy(alpha = 0.9f)),
+            .clip(RoundedCornerShape(28.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(24.dp)
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(4.dp),
+                    .padding(bottom = 8.dp),
                 textAlign = TextAlign.Center,
+                //color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleLarge,
                 text = "CHAT TITLE")
             OutlinedTextField(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 16.dp),
+                    .align(Alignment.CenterHorizontally),
+                    //.padding(horizontal = 16.dp),
                 value = chatTitle,
                 onValueChange = { onValueChangeTitle(it) })
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -134,7 +135,8 @@ fun ChatTitleTextField(
                         painter = painterResource(
                             id = R.drawable.baseline_save_24
                         ),
-                        contentDescription = "save"
+                        contentDescription = "save",
+                        //tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
                 IconButton(onClick = { onDismiss() }) {
@@ -142,7 +144,8 @@ fun ChatTitleTextField(
                         painter = painterResource(
                             id = R.drawable.baseline_cancel_24
                         ),
-                        contentDescription = "cancel"
+                        contentDescription = "cancel",
+                        //tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }

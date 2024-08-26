@@ -1,6 +1,10 @@
 package com.chris.geminibasedapp.common
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -12,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.chris.geminibasedapp.R
 
 @Composable
@@ -73,8 +78,19 @@ fun SaveChatConfirmationDialog(
         onDismissRequest = {
             dismiss() },
         confirmButton = {
-            TextButton(onClick = { confirm()  }) {
-                Text(text = "YES")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                TextButton(onClick = { dismiss() }) {
+                    Text(text = "CANCEL")
+                }
+                
+                Spacer(modifier = Modifier.width(4.dp))
+                
+                TextButton(onClick = { confirm() }) {
+                    Text(text = "YES")
+                }
             }
         })
 }
@@ -86,10 +102,14 @@ fun DeleteSavedChatDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = "Delete Selected Chat")
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = "Delete Selected Chat")
         },
         text = {
-            Text(text = "Do you want to delete selected chat ?")
+            Text(
+                text = "Do you want to delete selected chat ?")
         },
         onDismissRequest = { onDismiss() },
         confirmButton = {

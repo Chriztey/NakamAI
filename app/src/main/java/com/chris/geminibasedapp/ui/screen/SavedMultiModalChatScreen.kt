@@ -62,6 +62,7 @@ fun SavedMultiModalChatScreen(
     Scaffold(
         topBar = {
             TopBarApp(
+                title = "Saved MULTIMODAL Chat",
                 onNavigateToHome = {onNavigateToHome()}
             )
         }
