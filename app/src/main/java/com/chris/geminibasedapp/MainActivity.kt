@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.chris.geminibasedapp.ui.navigation.AppNavigationHost
 
 import com.example.compose.GeminiBasedAppTheme
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+        installSplashScreen()
         setContent {
             GeminiBasedAppTheme {
                 AppNavigationHost()
