@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace = "com.chris.geminibasedapp"
+    namespace = "com.chris.nakamai"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.chris.geminibasedapp"
+        applicationId = "com.chris.nakamai"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
@@ -157,6 +157,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation ("androidx.core:core-splashscreen:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
 }
 
