@@ -3,16 +3,21 @@ package com.chris.nakamai.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.chris.nakamai.ui.screen.HomeScreen
 import com.chris.nakamai.ui.screen.LoginScreen
+import com.chris.nakamai.ui.screen.OnboardingScreen
 import com.chris.nakamai.ui.screen.SavedMultiModalChatScreen
 import com.chris.nakamai.ui.screen.SavedMultiModalItemScreen
 import com.chris.nakamai.ui.screen.SavedTextGenItemScreen
 import com.chris.nakamai.ui.screen.SavedTextGenerationChatScreen
+import com.chris.nakamai.ui.viewmodel.SplashViewModel
 import kotlinx.serialization.Serializable
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -21,9 +26,12 @@ fun AppNavigationHost() {
 
     val navHost = rememberNavController()
 
+    val aiViewModel = hiltViewModel<SplashViewModel>()
+    val status by aiViewModel.onboardingStatus.collectAsState()
+
     NavHost(
         navController = navHost,
-        startDestination = LoginScreenRoute
+        startDestination = if (status) {LoginScreenRoute} else OnboardingRoute
     ) {
 
         composable<LoginScreenRoute> {
@@ -83,6 +91,10 @@ fun AppNavigationHost() {
             )
         }
 
+        composable<OnboardingRoute> {
+            OnboardingScreen()
+        }
+
     }
 
 }
@@ -106,3 +118,5 @@ data class SavedMultiModalItemScreenRoute(
 
 @Serializable
 object LoginScreenRoute
+@Serializable
+object OnboardingRoute

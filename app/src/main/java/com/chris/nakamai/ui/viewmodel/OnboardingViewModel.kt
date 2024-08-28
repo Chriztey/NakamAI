@@ -23,7 +23,7 @@ class SplashViewModel @Inject constructor(
     private val onBoardingRepository: OnBoardingRepository
 ) : ViewModel() {
 
-    private val _onboardingStatus : StateFlow<Boolean> =
+    var _onboardingStatus : StateFlow<Boolean> =
             onBoardingRepository.readOnBoardingState().map {
                 it
             }.stateIn(
@@ -32,19 +32,24 @@ class SplashViewModel @Inject constructor(
                 initialValue = false
             )
 
+    fun updateStatus() {
+        _onboardingStatus.let {
+            onBoardingRepository.readOnBoardingState().map {
+                it
+                Log.d("onboard", it.toString())
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false
+            )
+        }
+    }
+
     val onboardingStatus: StateFlow<Boolean> = _onboardingStatus
 
     init {
         viewModelScope.launch {
-            onBoardingRepository.readOnBoardingState().collect{
-                onboard ->
-
-                if (onboard) {
-                    Log.d("onboard", onboard.toString())
-                } else {
-                    Log.d("onboard", onboard.toString())
-                }
-            }
+            updateStatus()
         }
     }
 

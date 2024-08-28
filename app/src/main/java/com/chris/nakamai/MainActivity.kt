@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.chris.nakamai.ui.navigation.AppNavigationHost
+import com.chris.nakamai.ui.screen.OnboardingScreen
 
 import com.example.compose.GeminiBasedAppTheme
 import com.google.firebase.FirebaseApp
@@ -21,7 +22,9 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             GeminiBasedAppTheme {
-                AppNavigationHost()
+                //AppNavigationHost()
+                OnboardingScreen()
+//                Onboard()
             }
         }
     }

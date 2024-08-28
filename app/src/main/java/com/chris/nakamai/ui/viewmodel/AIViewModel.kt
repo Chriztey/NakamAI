@@ -14,6 +14,7 @@ import com.chris.nakamai.common.UiState
 import com.chris.nakamai.source.AIRepository
 import com.chris.nakamai.source.AuthRepository
 import com.chris.nakamai.source.FirestoreDBRepository
+import com.chris.nakamai.source.OnBoardingRepository
 import com.chris.nakamai.utils.Constants
 import com.chris.nakamai.utils.DataConversion
 import com.chris.nakamai.utils.StorageUtil
