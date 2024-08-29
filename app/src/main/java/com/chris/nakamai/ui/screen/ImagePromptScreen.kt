@@ -316,6 +316,8 @@ fun ImagePromptScreen() {
                                         "Please provide an image and text prompt to get started.",
                                 textAlign = TextAlign.Center
                             )
+
+
                         }
                     }
 

@@ -14,17 +14,17 @@ val listOnboardingComponent = listOf(
                 "always ready to chat and assist you."
     ),
     OnboardingComponent(
-        image = R.drawable.onboard_001,
+        image = R.drawable.onboard_002,
         text = "Explore smart conversations, get instant " +
                 "answers, and connect like never before."
     ),
     OnboardingComponent(
-        image = R.drawable.onboard_002,
+        image = R.drawable.onboard_003,
         text = "Ready to meet your new friend? " +
                 "Let’s get started!"
     ),
     OnboardingComponent(
-        image = R.drawable.onboard_002,
+        image = R.drawable.onboard_004,
         text = "To unlock Nakamai’s full potential, " +
                 "we need access to your camera and gallery. " +
                 "This allows you to share images and interact with our multimodal AI. " +
