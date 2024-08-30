@@ -22,9 +22,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             GeminiBasedAppTheme {
-                //AppNavigationHost()
-                OnboardingScreen()
-//                Onboard()
+                AppNavigationHost()
             }
         }
     }

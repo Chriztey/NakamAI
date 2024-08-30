@@ -80,12 +80,10 @@ fun OnboardingScreen() {
             ) {
 
 
-
                 Row(
                     Modifier
                         .wrapContentHeight()
                         .fillMaxWidth()
-                        //.align(Alignment.BottomCenter)
                         .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -136,24 +134,9 @@ fun OnboardingScreen() {
                 }
             }
 
-
         }
 
     }
-
-
-
-//    Column(
-//        modifier = Modifier.fillMaxSize(),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        Text(text = status.toString())
-//        Button(onClick = { aiViewModel.updateOnboardingStatus(!status) }) {
-//            Text(text = "Click")
-//        }
-//    }
-
 }
 
 

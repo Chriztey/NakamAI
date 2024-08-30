@@ -47,7 +47,7 @@ fun AppNavigationHost() {
                 navigateToSavedMultiModal = { navHost.navigate(SavedMultiModalChatScreenRoute) },
                 navigateToSavedTextGen = { navHost.navigate((SavedTextGenChatScreenRoute))},
                 navigateToLogin = {navHost.navigate(LoginScreenRoute)},
-                clearBackStack = {navHost.popBackStack(LoginScreenRoute, false)}
+                clearBackStack = {navHost.popBackStack(LoginScreenRoute, true)}
             )
         }
 
