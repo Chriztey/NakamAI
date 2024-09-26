@@ -27,6 +27,16 @@ DataStore is used for onboarding, ensuring a personalized and frictionless start
 
 ![Challenge Solution](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/19.png)
 
+<h1>Technology Stack</h1>
+
+![Tech](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/8.png)
+
+![Tech](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/9.png)
+
+<h1>Framework</h1>
+
+![Tech](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/10.png)
+
 <h1>API Keys Setup</h1>
 
 To run NakamaAI, you need to set up API keys for Gemini AI and Firebase. 
