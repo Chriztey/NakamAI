@@ -5,29 +5,29 @@ I’m thrilled to introduce NakamaAI, an innovative app I developed that combine
 
 ![Challenge Solution](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/21.png)
 
-Key Features of NakamaAI:
+**Key Features of NakamaAI:**
 
-🔊 AI-Powered Conversations:
+🔊 **AI-Powered Conversations:**
 NakamaAI uses Gemini AI to generate meaningful text responses, enhancing user interactions.
 Multimodal capability allows users to interact using both text and images, making conversations more dynamic.
 
-🗂️ Chat Management:
+🗂️ **Chat Management:**
 Users can save, delete, and view their conversations, offering control over interaction history.
 Powered by Firebase, ensuring secure and scalable data storage.
 
-🔒 Secure Authentication:
+🔒 **Secure Authentication:**
 Login with Google accounts using Firebase Authentication for a smooth and secure user experience.
 
-🎨 Modern UI with Jetpack Compose:
+🎨 **Modern UI with Jetpack Compose:**
 Built with Jetpack Compose for a responsive and visually appealing user interface.
 
-⚙️ Scalable Architecture:
+⚙️ **Scalable Architecture:**
 Developed using MVVM architecture and Hilt for dependency injection, ensuring a maintainable and scalable codebase.
 DataStore is used for onboarding, ensuring a personalized and frictionless start for users.
 
-
 ![Challenge Solution](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/19.png)
 
+<h1>API Keys Setup</h1>
 
 To run NakamaAI, you need to set up API keys for Gemini AI and Firebase. 
 
@@ -39,12 +39,14 @@ To run NakamaAI, you need to set up API keys for Gemini AI and Firebase.
    - Set up a Firebase project and add your Android app.
    - Download the `google-services.json` and place it in the `app/` directory.
   
+<h2>Demo Video</h2>
 
-<h1>Application UI</h1>
+https://youtu.be/sybaMy90Wkc?si=t-O--ssmRpgvWpPH
+
+<h2>Application UI</h2>
 
 
 ![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/12.png)
-
 
 ![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/13.png)
 
@@ -55,6 +57,8 @@ To run NakamaAI, you need to set up API keys for Gemini AI and Firebase.
 ![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/16.png)
 
 ![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/17.png)
+
+
 
 
 
