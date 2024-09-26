@@ -1,4 +1,9 @@
+![Alt text](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/1.png)
+
 I’m thrilled to introduce NakamaAI, an innovative app I developed that combines the power of Gemini AI with Firebase to create a seamless, engaging user experience. NakamaAI stands out with its dual functionality—offering both text generation and multimodal (text and image) interaction, along with robust chat management features.
+
+
+![Challenge Solution](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/21.png)
 
 Key Features of NakamaAI:
 
@@ -21,6 +26,9 @@ Developed using MVVM architecture and Hilt for dependency injection, ensuring a 
 DataStore is used for onboarding, ensuring a personalized and frictionless start for users.
 
 
+![Challenge Solution](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/19.png)
+
+
 To run NakamaAI, you need to set up API keys for Gemini AI and Firebase. 
 
 1. **Gemini AI**: 
@@ -30,3 +38,26 @@ To run NakamaAI, you need to set up API keys for Gemini AI and Firebase.
 2. **Firebase**:
    - Set up a Firebase project and add your Android app.
    - Download the `google-services.json` and place it in the `app/` directory.
+  
+
+<h1>Application UI</h1>
+
+
+![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/12.png)
+
+
+![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/13.png)
+
+![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/14.png)
+
+![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/15.png)
+
+![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/16.png)
+
+![UI](https://github.com/Chriztey/NakamAI/blob/main/NakamAI_PresentationDeck/17.png)
+
+
+
+
+
+  
