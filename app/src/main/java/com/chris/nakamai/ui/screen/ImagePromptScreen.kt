@@ -437,7 +437,6 @@ fun ImagePromptScreen() {
                     SaveChatConfirmationDialog(
                         confirm = {
                             saveChatTitle = true
-
                             saveChatConfirmation = false
                         },
                         dismiss = {saveChatConfirmation = false})

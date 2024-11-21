@@ -155,7 +155,6 @@ class AIViewModel @Inject constructor(
         chat: String,
         image: Bitmap? = null,
     ) {
-
         _chatRoomStateMultiModal.update {
                 current -> current.copy(
             chat = current.chat +
@@ -163,7 +162,7 @@ class AIViewModel @Inject constructor(
                         image = image,
                         chat = chat,
                         isUser = isUser)
-        )
+                )
         }
     }
 
@@ -200,15 +199,12 @@ class AIViewModel @Inject constructor(
         chatList: List<ChatLine>
     ) {
 
-
         val data = DataConversion.textGenerationData(
             title = title,
             chatList = chatList
         )
 
         _uiState.value = UiState.Loading
-
-
 
         firestoreDBRepository.saveChat(
             title = title,
@@ -275,7 +271,6 @@ class AIViewModel @Inject constructor(
         user: FirebaseUser,
         id: String
     ) {
-
         firestoreDBRepository.fetchIndividualSavedTextGenerationChat(
             user = user,
             id = id,
@@ -312,7 +307,6 @@ class AIViewModel @Inject constructor(
     fun deleteSavedMultiModalChat(
         user: FirebaseUser,
         documentId: String,
-
     ) {
         firestoreDBRepository.deleteSavedChat(
             user = user,
@@ -320,16 +314,11 @@ class AIViewModel @Inject constructor(
             documentId = documentId,
             callback = {_uiState.value = it}
         )
-
-
     }
 
     fun deleteMultiModalChatImage(
-
         imageId: List<String>
     ) {
-
-
         for (i in imageId) {
             StorageUtil.deleteImageFromStorage(
                 imageId = i,

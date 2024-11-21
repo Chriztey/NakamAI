@@ -29,8 +29,6 @@ class FirestoreDBRepoImplementation @Inject constructor(
         callback: (UiState) -> Unit,
         collection: String
     ) {
-
-
         firestore.collection(USER_PATH_FIRESTORE)
             .document(user.email!!)
             .collection(collection)
@@ -40,7 +38,6 @@ class FirestoreDBRepoImplementation @Inject constructor(
                 Log.d("Success", "DocumentSnapshot successfully written!")
                 callback(UiState.Success("Success"))
             }
-
             .addOnFailureListener { e ->
                 Log.e("Firestore Error", "Error writing document", e)
                 callback(UiState.Error(e.message ?: "Something Went Wrong"))
@@ -81,18 +78,11 @@ class FirestoreDBRepoImplementation @Inject constructor(
                 result(savedList)
                 callback(UiState.Success("Success"))
                 Log.d("Read Success", savedList.toString())
-
-
-
             }
             .addOnFailureListener { e ->
                 callback(UiState.Error(e.message.toString()))
                 Log.e("Firestore Error", "Error reading document", e)
             }
-
-
-
-
     }
 
     override fun fetchIndividualSavedTextGenerationChat(
@@ -122,8 +112,6 @@ class FirestoreDBRepoImplementation @Inject constructor(
                             isUser = chatLine[IS_USER] as Boolean
                         )
 
-//                        val chat = chatLine[CHAT] as String
-//                        val isUser = chatLine[IS_USER] as Boolean
 
                         Log.d("Read Success", "${temp.isUser} = ${temp.chat}")
                         savedChatList.add(temp)
